@@ -1,0 +1,287 @@
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import "../styles/Thoughts.css";
+import Navbar from "../Navbar";
+import { useNavigate } from "react-router-dom";
+import backArrow from "../../assets/lefta.png";
+import heartImg from "../../assets/Home/2.png";
+import menuIcon from "../../assets/menu.png"; 
+import vectorIcon from '../../assets/Vector1.png'; 
+import filledHeartIcon from '../../assets/herat.png';
+import next from"../../assets/next.png";   
+
+export default function DailyPage() {
+const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("All");
+  const [selectedLanguage, setSelectedLanguage] = useState("all_lang"); 
+  const [showFilter, setShowFilter] = useState(false);
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+    const [selectedFullImage, setSelectedFullImage] = useState(null);
+  
+  const cloudName = "dp3bcbwwt";
+
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("user_favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+ useEffect(() => {
+  const fetchImages = async () => {
+    try {
+    
+      const response = await axios.get(
+       `https://res.cloudinary.com/${cloudName}/image/list/thoughts.json`
+      );
+      setImages(response.data.resources);
+    } catch (error) {
+      console.error("Images not load :", error);
+    }
+  };
+  fetchImages();
+}, []);
+
+  
+const toggleFavorite = useCallback((e, imgSrc) => {
+    e.stopPropagation();
+    setFavorites((prev) => {
+      const isFav = prev.includes(imgSrc);
+      const updated = isFav 
+        ? prev.filter((fav) => fav !== imgSrc) 
+        : [...prev, imgSrc];
+      
+      localStorage.setItem("user_favorites", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+const handleImageClick = (imgSrc) => {
+    setSelectedFullImage(imgSrc);
+    
+    // Recent views logic
+    const savedRecent = localStorage.getItem("recently_viewed");
+    let recentArray = savedRecent ? JSON.parse(savedRecent) : [];
+    recentArray = [imgSrc, ...recentArray.filter(img => img !== imgSrc)];
+    localStorage.setItem("recently_viewed", JSON.stringify(recentArray.slice(0, 20)));
+  };
+
+    const navigateImage = (direction) => {
+
+    const imageUrls = filteredPosts.map(post => `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`);
+    const currentIndex = imageUrls.indexOf(selectedFullImage);
+
+    if (direction === "next") {
+      const nextIndex = (currentIndex + 1) % imageUrls.length; // Loops back to start
+      setSelectedFullImage(imageUrls[nextIndex]);
+    } else {
+      const prevIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length; // Loops to end
+      setSelectedFullImage(imageUrls[prevIndex]);
+    }
+  };
+  const handleNextToEdit = () => {
+    navigate("/post-selection", { 
+      state: { 
+        postImg: selectedFullImage, 
+        categoryName: "Daily",
+        subCategory: activeTab
+      } 
+    });
+  };
+
+
+const filteredPosts = images.filter((img) => {
+    const pId = img.public_id.toLowerCase();
+    const query = searchQuery.toLowerCase().trim();
+    if (query !== "") {
+      return pId.includes(query);
+    }
+    let matchesCategory = false;
+    switch (activeTab.trim()) {
+      case "All":
+        matchesCategory = true;
+        break;
+      case "Motivation":
+        matchesCategory = pId.includes("motivation");
+        break;
+      case "Shayari & Poetry":
+        matchesCategory = pId.includes("shayari");
+        break;
+      case "Life Lessons":
+        matchesCategory = pId.includes("life");
+        break;
+      case "Positive Vibes":
+        matchesCategory = pId.includes("positive");
+        break;
+      default:
+        matchesCategory = true;
+    }
+
+    const matchesLanguage = selectedLanguage === "all_lang" || pId.includes(selectedLanguage.toLowerCase());
+
+    return matchesCategory && matchesLanguage;
+  });
+
+  return (
+    <div className="cat-page-container7">
+      <Navbar onSearch={(text) => setSearchQuery(text)} />
+      
+      <div className="cat-banner7">
+        <div className="banner-content7"></div>
+      </div>
+
+      <div className="cat-filter-header7">
+        <div className="left-side7">
+          <img src={backArrow} alt="back" className="back-icon7" onClick={() => window.history.back()} />
+          <h3>Thoughts Posts</h3>
+        </div>
+
+        <div className="right-side7">
+  
+          <div className="filter-controls7" onClick={() => setShowFilter(!showFilter)}>
+            <div className="filter-trigger7">
+               <img src={menuIcon} alt="filter" className="vector-img-main7" />
+            </div>
+
+            
+            <div className={`filter-dropdown7 ${showFilter ? "show" : ""}`} onClick={(e) => e.stopPropagation()}>
+              <div className="filter-item7">
+                <label>Language</label>
+                <select>
+                   <option value="all_lang">All Languages</option> 
+                  <option value="marathi">Marathi</option>
+                  <option value="hindi">Hindi</option>
+                  <option value="english">English</option>
+                </select>
+              </div>
+
+              <div className="filter-item7">
+                <label>Sort By</label>
+                <select>
+                  <option value="newest">Newest Post</option>
+                  <option value="oldest">Oldest Post</option>
+                </select>
+              </div>
+               <div className="filter-item7">
+                <label>Category</label>
+                <select 
+               value={activeTab} 
+               onChange={(e) => setActiveTab(e.target.value)}   
+               >
+                  <option value="All">All</option>
+                  <option value="Motivation"> Motivation</option>
+                  <option value="Shayari & Poetry">Shayari & Poetry</option>
+                  <option value="Life Lessons">Life Lessons</option>
+                  <option value="Positive Vibes">Positive Vibes</option>
+   
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     
+      <div className="tab-container7">
+        {["All"," Motivation" ,"Shayari & Poetry" ," Life Lessons" ," Positive Vibes"].map((tab) => (
+          <button 
+            key={tab}
+            className={`tab ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      
+      <main className="posts-grid7">
+         {filteredPosts.length > 0 ? (
+    filteredPosts.map((post) => {
+      const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`;
+      const isFavorite = favorites.includes(imageUrl);
+
+
+      return (
+     <div key={post.public_id} className="post-item7" style={{ position: 'relative' }}> 
+  <img 
+    src={imageUrl} 
+    alt="Thoughts Post"
+    className="grid-img7"
+ onClick={() => handleImageClick(imageUrl)} 
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300'; }} 
+              />
+      <div
+    className="fav-icon-overlay"
+    onClick={(e) => toggleFavorite(e, imageUrl)}
+    style={{
+    position: 'absolute',
+            bottom: '10px',
+            right: '10px',
+            cursor: 'pointer',
+            zIndex: 10
+    }}
+  >
+    <img
+      src={isFavorite ? filledHeartIcon : vectorIcon}
+      alt="heart"
+      style={{ width: '20px', height: '20px' }}
+    />
+  </div>
+        </div>
+      );
+    })
+  ) : (
+    <p className="no-images-msg">Images loading or no images found...</p>
+  )}
+</main>
+      
+      {selectedFullImage && (
+        <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>
+          <div className="modal-content-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-x" onClick={() => setSelectedFullImage(null)}>✕</button>
+            
+            {/* Left Arrow */}
+            <div className="modal-nav-arrow left" onClick={() => navigateImage("prev")}>
+              <img src={next} alt="prev" style={{ width: '15px', transform: 'rotate(0deg)' }} />
+            </div>
+      
+            <div className="modal-image-wrapper" style={{ position: 'relative' }}>
+              <img src={selectedFullImage} alt="Big Size" className="full-view-img" />
+              
+              {/* Favorite Icon */}
+              <div
+                className="modal-fav-icon"
+                onClick={(e) => toggleFavorite(e, selectedFullImage)}
+                style={{
+                  position: 'absolute', bottom: '20px', right: '20px', cursor: 'pointer',
+                  borderRadius: '50%', padding: '10px', display: 'flex',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.2)', background: 'rgba(255,255,255,0.2)'
+                }}
+              >
+                <img 
+                  src={favorites.includes(selectedFullImage) ? filledHeartIcon : vectorIcon} 
+                  alt="heart" 
+                  style={{ width: '24px', height: '24px' }} 
+                />
+              </div>
+            </div>
+      
+            {/* Right Arrow */}
+            <div className="modal-nav-arrow right" onClick={() => navigateImage("next")}>
+              <img src={next} alt="next" style={{ width: '15px', transform: 'rotate(180deg)' }} />
+            </div>
+            
+            {/* Edit/Continue Button */}
+            <div className="edit-navigation-arrow" onClick={handleNextToEdit}>
+              <span className="arrow-text">Continue</span>
+              <img src={backArrow} alt="next" className="arrow-icon-flip" />
+            </div>
+          </div>
+        </div>
+      )}
+     </div>
+   );
+ }

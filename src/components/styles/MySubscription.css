@@ -1,0 +1,189 @@
+.my-sub-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center top, #000000 0%, #1a1a1a 100%);
+  color: white;
+  padding: 20px;
+}
+
+.my-sub-header {
+  display: flex;
+  align-items: center;
+margin-top: 20px;
+  border-bottom: 1px solid #BA7B03;
+  border-top: 1px solid #BA7B03;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.my-sub-content {
+  padding: 20px;
+}
+
+/* Status Card Styling */
+.status-card {
+  background: linear-gradient(135deg, #BA7B03 0%, #7a5102 100%);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.current-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.active-plan-name {
+  font-size: 32px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.status-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.billing-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item span {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.info-item strong {
+  font-size: 16px;
+}
+
+/* Benefits Section */
+.benefits-section h4 {
+  color: #BA7B03;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+}
+
+.benefits-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #222;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.check-icon {
+  color: #BA7B03;
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+/* Actions */
+.sub-actions {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.upgrade-btn {
+  width: 100%;
+  background: transparent;
+  border: 2px solid #BA7B03;
+  color: #BA7B03;
+  padding: 15px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cancel-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 15px;
+}
+/* History Section Styling */
+.history-section {
+  margin-top: 30px;
+}
+
+.history-section h4 {
+  color: #BA7B03;
+  margin-bottom: 5px;
+}
+
+.sub-info-text {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.history-main {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.hist-plan {
+  font-weight: bold;
+  color: #fff;
+}
+
+.hist-amount {
+  color: #BA7B03;
+  font-weight: bold;
+}
+
+.history-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+
+.hist-status.completed { color: #4CAF50; } /* Green */
+.hist-status.expired { color: #f44336; }   /* Red */
+
+/* Upgrade Button Adjustment */
+.upgrade-btn {
+  margin-top: 30px;
+  width: 100%;
+  background: transparent;
+  border: 2px solid #BA7B03;
+  color: #BA7B03;
+  padding: 14px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}

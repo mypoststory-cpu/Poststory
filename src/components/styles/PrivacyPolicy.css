@@ -1,0 +1,131 @@
+.policy-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center top, #000000 0%, #1a1a1a 100%);
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.policy-header-nav {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #BA7B03;
+  border-top: 1px solid #BA7B03;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+
+
+
+.policy-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.policy-hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.policy-hero h1 {
+  font-size: 28px;
+  color: #BA7B03;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-style: italic;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.effective-date {
+  font-size: 12px;
+  color: #555;
+}
+
+.policy-scroll-area {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.policy-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.policy-scroll-area::-webkit-scrollbar-thumb {
+  background: #BA7B03;
+  border-radius: 10px;
+}
+
+.policy-section {
+  margin-bottom: 25px;
+}
+
+.policy-section h2 {
+  font-size: 18px;
+  color: #fff;
+  border-left: 3px solid #BA7B03;
+  padding-left: 10px;
+  margin-bottom: 12px;
+}
+
+.policy-section p, .policy-section li {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #bbb;
+}
+
+.info-list li {
+  margin-bottom: 12px;
+}
+
+.highlight-box {
+  background: rgba(186, 123, 3, 0.1);
+  border: 1px solid rgba(186, 123, 3, 0.3);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.rights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.right-card {
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid #333;
+}
+
+.contact-box {
+  background: #000;
+  border: 1px solid #BA7B03;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.small-print {
+  font-size: 11px !important;
+  color: #666 !important;
+}
+
+.policy-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #333;
+  font-size: 12px;
+  color: #555;
+}

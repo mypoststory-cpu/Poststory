@@ -1,0 +1,123 @@
+.terms-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center top, #000000 0%, #1a1a1a 100%);
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.terms-header-nav {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #BA7B03;
+  border-top: 1px solid #BA7B03;
+  gap: 15px;
+}
+
+.terms-header-nav h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.terms-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.terms-hero h1 {
+  font-size: 28px;
+  color: #BA7B03;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-style: italic;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.effective-date {
+  font-size: 12px;
+  color: #555;
+}
+
+.terms-scroll-area {
+  max-height: 70vh; /* Allows scrolling on mobile */
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Scrollbar Styling */
+.terms-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.terms-scroll-area::-webkit-scrollbar-thumb {
+  background: #BA7B03;
+  border-radius: 10px;
+}
+
+.terms-section {
+  margin-bottom: 25px;
+}
+
+.terms-section h2 {
+  font-size: 18px;
+  color: #fff;
+  border-left: 3px solid #BA7B03;
+  padding-left: 10px;
+  margin-bottom: 12px;
+}
+
+.terms-section p, .terms-section li {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #bbb;
+}
+
+.terms-section ul {
+  padding-left: 20px;
+}
+
+.terms-section li {
+  margin-bottom: 8px;
+}
+
+.plan-list {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.plan-item {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.highlight-box {
+  background: rgba(186, 123, 3, 0.1);
+  border: 1px solid rgba(186, 123, 3, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  color: #fff !important;
+}
+
+.terms-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 20px 0;
+  border-top: 1px solid #333;
+  font-size: 12px;
+  color: #555;
+}

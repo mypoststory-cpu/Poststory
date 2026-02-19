@@ -1,0 +1,325 @@
+/* src/components/styles/Login.css - REVISED */
+.login-container1, 
+.login-container1 *, 
+.login-container1 input, 
+.login-container1 h3, 
+.login-container1 a {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+.login-container1 {
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    
+    background: radial-gradient(circle at center top, #000000 0%, #292525 70%, #6d6666 100%);
+    color: #ffffff;
+    padding-top: 30px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 5;
+    
+}
+
+.input-group, .not-registered, .or-sign-up, .google-login-placeholder {
+    position: relative; 
+    z-index: 10; 
+}
+
+
+.top-bar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    color: #999999;
+}
+
+.post-story-label {
+    display: none; 
+}
+
+
+.header-message { 
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #999999;
+    text-align: center;
+    margin-bottom: 30px; 
+    margin-top: 20px;
+}
+
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes counter-spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+.logo-circle {
+    width: 150px; 
+    height: 150px;
+    border-radius: 50%;
+    background-image: url('../../assets/LogoB.png'); 
+    background-size: cover; 
+    position: relative;
+    overflow: hidden; 
+    margin-top: 30px;
+    animation: spin 10s linear infinite; 
+}
+
+.static-logo-image {
+    width: 70%; 
+    height: 60%;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    animation: counter-spin 10s linear infinite; 
+}
+
+/* --- LOGIN HEADLINE (Mobile Alignment Fix) --- */
+.login-container h3 {
+    font-size: 1.2rem; 
+    font-weight: 100;
+    margin-bottom: 6px; 
+  margin-top: 80px;
+    width: 85%; /* Match input width */
+    max-width: 350px; /* Match input max-width */
+    text-align: left;
+      letter-spacing: 1px;
+      color: #B3B0B0;
+}
+
+.head {
+
+    width: 85%; /* Adjusted for alignment */
+    max-width: 350px; /* Adjusted for alignment */
+    text-align: left; 
+    padding-left: 90px;
+    margin-bottom: 9px;
+}
+
+
+.input-group1 {
+   
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 10px; 
+    position: relative;
+  
+}
+
+.rounded-input1 {
+
+    width: 100%;
+    padding: 14px 20px;
+ border: 1px solid #BA7B03;
+    border-radius: 30px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    font-style: italic;
+}
+
+
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d3841d; 
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 30px;
+}
+
+
+.resend-otp {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #999999; 
+    margin: 0px auto 0 auto; 
+    width: 85%;
+    max-width: 350px;
+    padding-right: 35px; 
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+
+.not-registered {
+    margin-top: 40px; 
+    font-size: 0.9rem; 
+    color: #ffffff;
+    text-align: center;
+    font-weight:initial;
+}
+
+.sign-up-link {
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 5px;
+   display: block;  
+    cursor: pointer;
+      margin-top: 6px;
+}
+
+.or-sign-up {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #c7c7c7;
+      
+}
+
+
+.google-login-placeholder {
+    width: 40px;
+    height: 40px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+
+.bottom-arc-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 0; 
+}
+
+.bottom-arc-gradient {
+    width: 150%; 
+    height: 300px;
+    border-radius: 50%;
+  
+    opacity: 0.7;
+    transform: translateY(50%);
+}
+
+.center-animated-ring-wrapper1 {
+    
+    position: absolute;
+      bottom: -75%;       
+    left: 0%;
+    transform: translateX(-50%);
+    width: 2000px; 
+    height: 2000px;
+    max-width: 130vw;
+    max-height: 180vw;
+    z-index: 1;
+
+     pointer-events: none; 
+}
+
+.center-animated-ring1 {
+    
+    width: 175%;
+    height: 100%;
+    background-image: url('../../assets/LogoB.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: rotate360 40s linear infinite; 
+     opacity: 0.9;   
+}
+
+/* ==================================== */
+/* 🖥️ DESKTOP/TABLET MEDIA QUERY */
+/* ==================================== */
+@media (min-width: 768px) {
+    
+    .login-container {
+    
+        padding-top: 0;
+    
+        justify-content: center;
+    }
+
+    .top-bar {
+       
+        justify-content: space-between;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 400px; 
+    }
+
+    .post-story-label {
+        display: block; 
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+   
+    .center-content-desktop {
+      
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        border-radius: 10px;
+        background-color: #1a1a1a; 
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .logo-circle {
+        margin-bottom: 20px;
+        width: 100px; 
+        height: 100px;
+    }
+
+    .header-message {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .login-container h3, .head {
+       
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
+        margin-bottom: 20px;
+    }
+    
+   
+    .input-group, 
+    .resend-otp,
+    .not-registered,
+    .or-sign-up,
+    .google-login-placeholder {
+   
+        width: 100%;
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .resend-otp {
+        padding-right: 0; 
+    }
+    
+  
+}

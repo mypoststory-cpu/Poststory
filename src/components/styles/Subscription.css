@@ -1,0 +1,119 @@
+
+
+
+.subscription-container {
+  min-height: 100vh;
+ background: radial-gradient(circle at center top, #000000 0%, #3b3636 70%, #4a4545 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 40px 20px;
+ 
+}
+
+.subscription-header-nav {
+  display: flex;
+  align-items: center;
+margin-top: 20px;
+  border-bottom: 1px solid #BA7B03;
+  border-top: 1px solid #BA7B03;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.back-btn {
+   width: 22px;
+  cursor: pointer;
+   }
+
+.main-title {
+text-align: center;
+  font-size: 26px;
+  margin: 30px 0;
+  font-weight: bold;
+}
+.plan-comparison-card {
+
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  padding: 0 20px;
+}
+
+.plan-tabs-header {
+display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-bottom: 1.5px solid #333;
+    font-size: 18px;
+    background: black;
+    border-radius: 12px;
+}
+
+
+.tab-item {
+  color: #777;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.tab-item.active {
+  color: #fff;
+  border-bottom: 2px solid #BA7B03;
+  padding-bottom: 2px;
+}
+
+.comparison-table {
+  padding: 20px 30px;
+  background-color: black;
+  border-radius: 12px;
+  margin-top: 10px;
+    border: 2px solid rgb(197, 137, 26);
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+  font-size: 15px;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.row-label { color: #fff; font-weight: 500; }
+.row-value { color: #888; text-align: right; }
+
+.annual-banner {
+  background: #000;
+  border: 1.5px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.annual-text {     font-size: 18px;
+    font-weight: normal;
+    color: #888;}
+.annual-price { font-size: 28px; font-weight: bold; color: #fff; }
+.annual-price small { font-size: 18px; font-weight: normal; color: #888; }
+
+.subscribe-pay-btn {
+  width: 90%;
+  background: #BA7B03;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 20px;
+}

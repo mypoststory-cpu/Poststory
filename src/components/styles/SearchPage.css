@@ -1,0 +1,141 @@
+/* SearchPage.css */
+
+.search-page-container {
+    background-color: #121212; 
+    min-height: 100vh;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    padding: 25px;
+
+}
+.back{
+     display: flex;
+      align-items: center;
+       margin-bottom: 20px; 
+       margin-top: 20px;
+    
+    border-top: 1.2px solid #BA7B03;
+    border-bottom: 1.2px solid #BA7B03;
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.search-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #1a1a1a;
+    position: sticky;
+    top: 60px; 
+    z-index: 100;
+    border-bottom: 1px solid #333;
+}
+
+.back-icon {
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-right: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.back-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.search-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #f1f1f1;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px;
+    padding: 15px;
+}
+
+/* Post Card Styling */
+.post-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #1e1e1e;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+}
+
+.post-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    border-radius: 12px;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.loading-text {
+    color: #aaa;
+    margin-top: 15px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+/* No Results State */
+.no-results {
+    text-align: center;
+    padding: 50px 20px;
+    grid-column: 1 / -1;
+}
+
+.no-results p {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.home-btn {
+    background: linear-gradient(45deg, #ff4757, #ff6b81);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.home-btn:hover {
+    box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+}
+
+@media (min-width: 768px) {
+    .posts-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .posts-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

@@ -1,0 +1,92 @@
+
+.favorites-container, 
+.favorites-container *, 
+.favorites-container h2 {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.favorites-container {
+    min-height: 100vh;
+    background: radial-gradient(circle at center top, #000000 0%, #1a1a1a 70%, #222 100%);
+    color: white;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.fav-banner {
+    width: 100%;
+    height: 190px;
+    background-image: url('../../assets/Home/Advt.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    margin-top: 15px;
+}
+
+.liked-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;           
+  border-top: 1.2px solid #BA7B03;
+  border-bottom: 1.2px solid #BA7B03; 
+  width: 100%;
+  
+ margin-top: 20px;
+ margin-bottom: 20px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.left-side h3 {
+  margin: 0;
+  padding: 10px 0; 
+}
+.back-arrow-img {
+    width: 24px;     
+    height: auto;
+    cursor: pointer;
+    object-fit: contain;
+    filter: brightness(0) invert(1); 
+}
+
+.liked-header h2 {
+    font-size: 24px;
+    color: white;
+    margin: 0;
+    font-weight: 300;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.fav-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    background: #333;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.fav-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.heart-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(15, 14, 14, 0.9); 
+    border-radius: 50%;
+    width: 24px;  
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 5;
+}

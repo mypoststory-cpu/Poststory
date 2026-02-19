@@ -1,0 +1,289 @@
+/* src/components/styles/Registration.css */
+.registration-container, 
+.registration-container *, 
+.registration-container input, 
+.registration-container button,
+.registration-container h2,
+.registration-container h3 {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+@keyframes counter-spin {
+
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); } 
+}
+
+
+
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+  
+    background: radial-gradient(circle at center top, #000000 0%, #292525 70%, #6d6666 100%);
+    color: #ffffff;
+    padding-top: 30px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1; 
+      font-family: Arial, Helvetica;
+}
+
+.signup-text {
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: #ffffff;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+
+.signup-text::after {
+  content: "";
+  display: block;
+  width: 200px;
+  height: 2px;
+  background-color: #BA7B03;
+  margin-top: 6px;
+}
+
+
+
+.center-logo1 {
+      display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 25px;
+    
+}
+.logo-wrapper {
+ display: flex;
+  align-items: flex-start;   /* 👈 IMPORTANT */
+  gap: 6px;
+}
+.logo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.logo-text {
+     width: 120px;
+    height: auto;
+    margin-top: 20px;
+    object-fit: contain;
+    margin-bottom: -5px;
+
+}
+
+
+.logo-ring {
+width: 100px;
+  height: 75px;
+  border-radius: 50%;
+  background-image: url('../../assets/LogoB.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: spin 12s linear infinite;
+
+  margin-top: 70px;           
+  flex-shrink: 0;           
+ 
+ 
+}
+
+
+
+
+.static-logo-image-right {
+    width: 60px;
+    height: 50px;
+    object-fit: contain;
+
+}
+.staticbellow{
+     width: 120px;
+    height: 70px;
+    object-fit: contain;
+    top: 500px;
+}
+
+
+/* --- HEADER TEXT--- */
+.registration-container h2 {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #999999;
+    margin-bottom: 30px; 
+    margin-top: 20px; 
+}
+
+.registration-container h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 30px; 
+    color: #ffffff;
+}
+
+
+.input-group {
+
+    width: 76%;
+    max-width: 350px;
+    margin-bottom: 15px; /* Login  20px  15px  */
+    position: relative;
+    z-index: 10; /* 🛑 Clickability  z-index 🛑 */
+}
+
+.rounded-input {
+     width: 100%;
+    padding: 14px 20px;
+    border: 1px solid #BA7B03;
+    border-radius: 30px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    font-style: italic;
+}
+.continue-button1 {
+  width: 70%;
+    border: 1px solid #BA7B03;
+    background:#000000;
+    color: white;
+    font-size: 18px; 
+    font-weight: 300;
+    padding: 15px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    gap: 100px; 
+    
+ z-index:20;  
+    position: relative;
+
+}
+.center-animated-ring-wrapper2,
+.center-animated-ring2,
+.bottom-arc-container,
+.bottom-arc-gradient {
+  pointer-events: none;   
+}
+
+
+.arrow-icon {
+ font-size: 20px;
+    margin-left: 5px;
+    width: 30px;
+}
+
+.tagline {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: #b5b5b5;
+    line-height: 1.3;
+    text-align: left;
+
+}
+.page-title {
+    margin-top: 18px;
+    margin-bottom: 25px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.tagline-below-logo{
+    margin: 0; 
+    font-size: 1.6rem; 
+    font-weight: 300;
+    color: #F5F5F5;
+    line-height: 1.3;
+    text-align: left;
+    padding-bottom: 40px;
+    margin-left: 10px;
+}
+
+/* --- TERMS CHECKBOX --- */
+.terms-checkbox {
+  display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #999999;
+    margin-bottom: 12px; 
+    position: relative;
+    z-index: 10; 
+
+    width: 85%;
+    max-width: 350px;
+    justify-content: center; 
+   
+}
+
+.terms-checkbox input[type="checkbox"] {
+
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+
+}
+
+
+.bottom-arc-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 0; 
+}
+
+.bottom-arc-gradient {
+    width: 150%; 
+    height: 300px;
+    border-radius: 50%;
+
+    opacity: 0.7;
+    transform: translateY(50%);
+}
+
+.center-animated-ring-wrapper2 {
+
+    position: absolute;
+      bottom: -75%;       
+    left: 0%;
+    transform: translateX(-50%);
+    width: 2000px; 
+    height: 2000px;
+    max-width: 130vw;
+    max-height: 180vw;
+    z-index: 1;
+
+     pointer-events: none; 
+}
+
+.center-animated-ring2 {
+ 
+   width: 175%;
+    height: 100%;
+    background-image: url('../../assets/LogoB.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: rotate360 40s linear infinite; 
+     opacity: 0.9;  
+}

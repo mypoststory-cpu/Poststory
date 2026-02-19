@@ -1,0 +1,214 @@
+/* 1. Force Arial on everything within these header and menu components */
+.top-header, 
+.top-header *,
+.search-bar input,
+.side-menu,
+.side-menu *,
+.menu-list li {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.top-header {
+ display: flex;
+    justify-content: space-between;
+    align-items: center;
+ 
+    width: 100%;
+
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-bar-active {
+    flex: 1;
+    margin: 0 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    padding: 5px 12px;
+}
+
+.search-bar-active input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+}
+
+.close-btn-small {
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+}
+.header-text-static {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.header-text-static h3 {
+    margin: 0;
+    font-size: 16px;
+    color: white;
+}
+
+.header-text-static span {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+}
+.profile span {
+    margin: 0;
+    line-height: 1;
+    display: block;
+}
+
+.profile-ring {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rotating-logo {
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    background-image: url('../../assets/LogoRing.png');
+    background-size: contain;
+    animation: rotateProfile 8s linear infinite;
+}
+
+.profile-img {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    z-index: 2;
+    object-fit: cover;
+}
+
+/* Fixed: Single rotate animation definition */
+@keyframes rotateProfile {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.profile div {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon-img {
+    width: 22px;
+    height: 22px;
+    margin-left: 14px;
+    cursor: pointer;
+    object-fit: contain;
+}
+
+.icon-imgf {
+    width: 28px;
+    height: 28px;
+    margin-left: 14px;
+    cursor: pointer;
+    object-fit: contain;
+}
+
+/* Search Bar Styling */
+.search-mode-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.search-bar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: white;
+    flex: 1;
+    padding-left: 10px;
+    outline: none;
+}
+
+/* Side Menu / Overlay Styling */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    padding-left: 50px;
+}
+
+.side-menu {
+    width: 75%;
+    height: 100%;
+    background: #e0e0e0;
+    color: #333;
+    padding: 20px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.menu-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    text-align: right;
+    padding-right: 40px;
+}
+
+.menu-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #d8d4d4;
+    color: #555;
+    cursor: pointer;
+}
+.menu-close-header {
+    text-align: right;
+    padding-right: 40px;
+}
+
+.logout-btn { 
+    color: red !important; 
+    font-weight: bold; 
+}

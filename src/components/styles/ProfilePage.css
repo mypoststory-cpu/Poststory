@@ -1,0 +1,145 @@
+
+.profile-container, 
+.profile-container *, 
+.profile-container input, 
+.profile-container button,
+.profile-container h3 {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+.profile-container {
+  min-height: 100vh;
+ background: radial-gradient(circle at center top, #000000 0%, #3b3636 70%, #4a4545 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+ 
+
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 20px;
+  border-bottom: 1px solid #ffa500;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #ffa500;
+}
+
+
+.back-icon {
+  width: 25px;
+  cursor: pointer;
+}
+
+.profile-content {
+  padding: 0 30px 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-section {
+  margin-bottom: 30px;
+}
+
+.avatar-glow {
+  width: 140px;
+  height: 140px;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  background: #eee;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.user-icon {
+  font-size: 60px;
+  color: #ccc;
+}
+
+
+.profile-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+justify-content: center;
+  align-items: center;
+}
+
+.profile-form input {
+    width: 100%;
+    padding: 14px 20px;
+ border: 1px solid #BA7B03;
+    border-radius: 30px;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    font-style: italic;
+}
+.profile-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
+
+.add-plus-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #BA7B03;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+
+  z-index: 10;
+}
+.profile-form input::placeholder {
+  color: #bbb;
+  font-style: italic;
+}
+
+.profile-save-btn {
+  margin-top: 20px;
+  background: transparent;
+  color: white;
+  border: 1.5px solid #ffa500;
+  padding: 15px;
+  border-radius: 35px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.profile-save-btn:active {
+  background: rgba(255, 165, 0, 0.2);
+}

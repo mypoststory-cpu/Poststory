@@ -1,0 +1,113 @@
+/* 1. Force Arial on everything within the history container */
+.history-container, 
+.history-container *, 
+.history-container h3, 
+.history-container th, 
+.history-container td {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.history-container {
+    min-height: 100vh;
+    background: radial-gradient(circle at center top, #000000 0%, #3b3636 70%, #4a4545 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 0 20px; /* Simplified padding shorthand */
+}
+
+.history-header {
+     display: flex;
+  align-items: center;
+margin-top: 20px;
+  border-bottom: 1px solid #BA7B03;
+  border-top: 1px solid #BA7B03;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+
+
+.history-content {
+    padding: 10px 15px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.history-table th {
+    text-align: left;
+    color: #888;
+    font-weight: 400;
+    padding: 10px 5px;
+    border-bottom: 1px solid #333;
+    font-size: 14px;
+}
+
+.sortable .arrow {
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.history-table td {
+    padding: 12px 5px;
+    vertical-align: middle;
+}
+
+.post-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.post-thumb {
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.post-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.p-cat { 
+    font-size: 13px; 
+    color: #ddd; 
+}
+
+.p-sub { 
+    font-size: 11px; 
+    color: #777; 
+}
+
+.date-cell {
+    font-size: 12px;
+    color: #ddd;
+}
+
+.time-text {
+    font-size: 11px;
+    color: #777;
+}
+
+.social-icon-img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Scrollbar Styling */
+.history-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-content::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
+}

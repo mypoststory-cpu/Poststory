@@ -1,0 +1,251 @@
+.cat-page-container9, 
+.cat-page-container9 *, 
+.cat-page-container9 select, 
+.cat-page-container9 button,
+.cat-page-container9 h2 {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+.cat-page-container9{
+    min-height: 100vh;
+  background: radial-gradient(circle at center top, #000000 0%, #1a1a1a 70%, #222 100%);
+  color: white;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.cat-banner9 {
+   width: 100%;
+  height: 190px;
+  background-image: url('../../assets/Home/Advt.png'); 
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+
+.banner-content9 span { color: #BA7B03; font-weight: bold; }
+
+
+.cat-filter-header9 {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;           
+  border-top: 1.2px solid #BA7B03;
+  border-bottom: 1.2px solid #BA7B03; 
+  width: 100%;
+  
+ 
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.left-side9 h3 {
+  margin: 0;
+  padding: 10px 0; 
+}
+
+.back-icon9, .vector-img-main8 {
+  display: block; 
+}
+
+.left-side9 {
+  display: flex;
+  align-items: center;
+  gap: 12px; 
+}
+
+
+.back-icon9 {
+
+  width: 26px;
+  height: auto;
+  cursor: pointer;
+}
+
+.cat-filter-header9 h2 {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap; 
+}
+
+.lang-text9 {
+  font-size: 16px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.right-side9 {
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.filter-controls9 {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-trigger9 {
+  display: flex;
+  align-items: center;
+ 
+
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 8px;
+  border-radius: 20px;
+
+  cursor: pointer;
+}
+
+.vector-img-main9 {
+  width: 28px;
+  height: auto;
+}
+.posts-grid9{
+display: grid;
+ 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.grid-img9 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+.fav-icon-overlay:hover {
+  transform: scale(1.1); /* Hover kelyavar heart motha hoil */
+}
+.post-item9{
+  width: 100%;
+
+  object-fit: cover;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+ 
+}
+
+.no-images-msg {
+  text-align: center;
+  grid-column: span 3;
+  padding: 40px 0;
+}
+.filter-label9 {
+  color: white;
+  font-size: 14px;
+}
+
+.filter-dropdown9 {
+  display: none; 
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  z-index: 100;
+  min-width: 200px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+}
+
+.filter-controls9:hover .filter-dropdown {
+  display: block;
+}
+
+.filter-dropdown9.show {
+  display: block;
+}
+
+.filter-item9 {
+  margin-bottom: 15px;
+}
+
+.filter-item:last-child {
+  margin-bottom: 0;
+}
+
+.filter-item9 label {
+  display: block;
+  font-size: 15px;
+  color: #ffa500;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.filter-item9 select {
+  width: 100%;
+  background: #252525;
+  color: white;
+  border: 1px solid #444;
+  padding: 8px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+}
+
+
+.category-box-inner9 {
+  display: flex;
+  align-items: center;
+  background: #252525;
+  border: 1px solid #444;
+  padding: 5px 10px;
+  border-radius: 6px;
+  gap: 10px;
+}
+
+.vector-img-small9 {
+  width: 2%;
+  opacity: 0.8;
+}
+
+.inline-select9 {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+
+.tab-container9 {
+  display: flex;
+  gap: 10px;          
+  overflow-x: auto;   
+  padding: 10px 10px;     
+  scrollbar-width: none; 
+}
+
+.tab-container::-webkit-scrollbar {
+  display: none;      
+}
+
+
+.tab {
+  background: #2a2a2a;
+  border: none;
+  color: #888;        
+  padding: 10px 10px;   
+  border-radius: 10px; 
+  font-size: 20px;
+  white-space: nowrap; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+
+.tab.active {
+  background: #444;   
+  color: white;        
+  border: 1px solid #555; 
+}
