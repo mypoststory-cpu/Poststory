@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import './styles/Home.css';
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// --- NAVIN BADAL: Firestore imports ---
+import { collection, getDocs, query, where, limit } from "firebase/firestore";
+import { db } from "../firebaseConfig"; 
+
 import vectorIcon from '../assets/Vector1.png';
 import filledHeartIcon from '../assets/herat.png';
 import backArrow from '../assets/lefta.png'; 
@@ -19,8 +22,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [trendingList, setTrendingList] = useState([]);
   const [forYouList, setForYouList] = useState([]);
-  const [selectedFullImage, setSelectedFullImage] = useState(null); // Modal state
-  const cloudName = "dp3bcbwwt";
+  const [selectedFullImage, setSelectedFullImage] = useState(null);
 
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("user_favorites");
@@ -41,13 +43,11 @@ export default function Home() {
 
   const handleImageClick = (imgSrc) => {
     setSelectedFullImage(imgSrc);
-    
     const savedRecent = localStorage.getItem("recently_viewed");
     let recentArray = savedRecent ? JSON.parse(savedRecent) : [];
     recentArray = [imgSrc, ...recentArray.filter(img => img !== imgSrc)];
     localStorage.setItem("recently_viewed", JSON.stringify(recentArray.slice(0, 20)));
   };
-
 
   const handleNextToEdit = () => {
     navigate("/post-selection", { 
@@ -59,15 +59,20 @@ export default function Home() {
     });
   };
 
+  // --- NAVIN BADAL: Firestore मधून Trending इमेजेस लोड करणे ---
   useEffect(() => {
     const fetchTrendingImages = async () => {
       try {
-        const response = await axios.get(
-          `https://res.cloudinary.com/${cloudName}/image/list/treading_folder.json`
+        // 'postimg' कलेक्शनमधून फक्त trending इमेजेस (पहिले १०) आणा
+        const q = query(
+          collection(db, "postimg"), 
+          where("isTrending", "==", true),
+          limit(10)
         );
-        const latestImages = response.data.resources.slice(0, 10).map(img => 
-          `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${img.public_id}`
-        );
+
+        const querySnapshot = await getDocs(q);
+        const latestImages = querySnapshot.docs.map(doc => doc.data().imageUrl);
+        
         setTrendingList(latestImages);
       } catch (error) {
         console.error("Home trending images error:", error);
@@ -113,23 +118,27 @@ export default function Home() {
             <span onClick={() => navigate("/trending")}>Show All</span>
           </div>
           <div className="card-row">
-            {trendingList.map((imgSrc, index) => {
-              const isFavorite = favorites.includes(imgSrc);
-              return (
-                <div key={index} className="post-card" style={{ position: 'relative' }}>
-                  <img
-                    src={imgSrc}
-                    className="card-img-full"
-                    alt="trending"
-                    onClick={() => handleImageClick(imgSrc)}
-                  />
-                  <div className="fav-icon-overlay" onClick={(e) => toggleFavorite(e, imgSrc)}
-                    style={{ position: 'absolute', bottom: '1px', right: '1px', cursor: 'pointer', zIndex: 10 }}>
-                    <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '18px', height: '18px' }} />
+            {trendingList.length > 0 ? (
+              trendingList.map((imgSrc, index) => {
+                const isFavorite = favorites.includes(imgSrc);
+                return (
+                  <div key={index} className="post-card" style={{ position: 'relative' }}>
+                    <img
+                      src={imgSrc}
+                      className="card-img-full"
+                      alt="trending"
+                      onClick={() => handleImageClick(imgSrc)}
+                    />
+                    <div className="fav-icon-overlay" onClick={(e) => toggleFavorite(e, imgSrc)}
+                      style={{ position: 'absolute', bottom: '1px', right: '1px', cursor: 'pointer', zIndex: 10 }}>
+                      <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '18px', height: '18px' }} />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <p style={{marginLeft: '20px', color: '#888', fontSize: '13px'}}>No trending posts available.</p>
+            )}
           </div>
         </section>
 
@@ -150,23 +159,27 @@ export default function Home() {
             <span onClick={() => navigate("/foru")} style={{ cursor: 'pointer' }}>Show All</span>
           </div>
           <div className="card-row">
-            {forYouList.map((imgSrc, index) => {
-              const isFavorite = favorites.includes(imgSrc);
-              return (
-                <div key={index} className="post-card" style={{ position: 'relative' }}>
-                  <img
-                    src={imgSrc}
-                    className="card-img-full"
-                    alt="for you"
-                    onClick={() => handleImageClick(imgSrc)}
-                  />
-                  <div className="fav-icon-overlay" onClick={(e) => toggleFavorite(e, imgSrc)}
-                    style={{ position: 'absolute', bottom: '1px', right: '1px', cursor: 'pointer', zIndex: 10 }}>
-                    <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '18px', height: '18px' }} />
+            {forYouList.length > 0 ? (
+              forYouList.map((imgSrc, index) => {
+                const isFavorite = favorites.includes(imgSrc);
+                return (
+                  <div key={index} className="post-card" style={{ position: 'relative' }}>
+                    <img
+                      src={imgSrc}
+                      className="card-img-full"
+                      alt="for you"
+                      onClick={() => handleImageClick(imgSrc)}
+                    />
+                    <div className="fav-icon-overlay" onClick={(e) => toggleFavorite(e, imgSrc)}
+                      style={{ position: 'absolute', bottom: '1px', right: '1px', cursor: 'pointer', zIndex: 10 }}>
+                      <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '18px', height: '18px' }} />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <p style={{marginLeft: '20px', color: '#888', fontSize: '13px'}}>No history yet.</p>
+            )}
           </div>
         </section>
       </main>

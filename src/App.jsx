@@ -31,6 +31,8 @@ import TermsOfService from "./components/pages/TermsOfService";
 import PrivacyPolicy from "./components/pages/PrivacyPolicy";
 import HelpFeedback from "./components/pages/HelpFeedback";
 import MySubscription from "./components/pages/MySubscription";
+import AdminUpload from "./components/pages/AdminUpload";
+import AdminBulkUpload from "./components/pages/AdminBulkUpload";
 
 
 export default function App() {
@@ -59,11 +61,13 @@ export default function App() {
 <Route path="/subscription" element={<Subscription />} />
 <Route path="/search" element={<SearchPage />} />
 <Route path="/signatureselection" element={<SignatureSelection/>}/>
-
+<Route path="/admin-upload" element={<AdminUpload />} />
 <Route path="/termsofservice" element={<TermsOfService/>} />
 <Route path="/privacypolicy" element={<PrivacyPolicy/>} />
 <Route path="/helpfeedback" element={<HelpFeedback/>} />
 <Route path="/mysubscription" element={<MySubscription/>} />
+<Route path="/admin-bulk-upload" element={<AdminBulkUpload />} />
+
 
     </Routes>
          <InstallApp />  

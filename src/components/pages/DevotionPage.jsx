@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Devotion.css";
 import Navbar from "../Navbar";
@@ -8,7 +7,8 @@ import menuIcon from "../../assets/menu.png";
 import vectorIcon from '../../assets/Vector1.png'; 
 import filledHeartIcon from '../../assets/herat.png';
 import next from"../../assets/next.png";
-
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 
 export default function DailyPage() {
@@ -40,22 +40,28 @@ export default function DailyPage() {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `https://res.cloudinary.com/${cloudName}/image/list/devotion_folder.json`
-        );
-        setImages(response.data.resources);
-      } catch (error) {
-        console.error("Devotion images load error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchImages();
-  }, []);
+useEffect(() => {
+  const fetchImages = async () => {
+    setLoading(true);
+    try {
+      const q = query(
+        collection(db, "postimg"), 
+        where("category", "==", "Devotions")
+      );
+      const querySnapshot = await getDocs(q);
+      const imgArray = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setImages(imgArray);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchImages();
+}, []);
 
 const handleImageClick = (imgSrc) => {
     setSelectedFullImage(imgSrc);
@@ -93,35 +99,25 @@ const handleImageClick = (imgSrc) => {
   };
 
 const filteredPosts = images.filter((img) => {
-  const pId = img.public_id.toLowerCase();
-  const query = searchQuery.toLowerCase().trim();
+ 
+  const subCatFromDB = (img.subCategory || "").toLowerCase().trim();
+  const langFromDB = (img.language || "").toLowerCase().trim();
+  const titleFromDB = (img.title || "").toLowerCase();
+  const searchQ = searchQuery.toLowerCase().trim();
 
-  const matchesLanguage = selectedLanguage === "all_lang" || pId.includes(selectedLanguage.toLowerCase());
+  
+  const matchesLanguage = selectedLanguage === "all_lang" || langFromDB === selectedLanguage.toLowerCase();
   if (!matchesLanguage) return false;
 
-  if (query !== "") {
-    return pId.includes(query);
-  }
+  // ३. Search Filter
+  const matchesSearch = searchQ === "" || titleFromDB.includes(searchQ);
+  if (!matchesSearch) return false;
+
 
   if (activeTab === "All") return true;
 
-  const tabLower = activeTab.toLowerCase();
 
-
-  if (tabLower.includes("ram") && tabLower.includes("sita")) {
-
-    const isTukaram = pId.includes("tukaram");
-    const isRamNavmi = pId.includes("navmi") || pId.includes("festival");
-
-    return (pId.includes("ram") || pId.includes("rama") || pId.includes("sita")) && !isTukaram && !isRamNavmi;
-  }
-
-  if (tabLower.includes("tukaram")) {
-    return pId.includes("tukaram");
-  }
-
-  const searchKey = tabLower.split(" ")[0].replace("&", "");
-  return pId.includes(searchKey);
+  return subCatFromDB === activeTab.toLowerCase().trim();
 });
 
   const devotionTabs = [
@@ -188,51 +184,52 @@ const filteredPosts = images.filter((img) => {
       </div>
 
       <main className="posts-grid3">
-        {loading ? (
-          <p style={{ textAlign: "center", gridColumn: "1/-1" }}>Loading Images...</p>
-        ) : filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => {
-            const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`;
-            const isFavorite = favorites.includes(imageUrl);
+  {loading ? (
+    <p style={{ textAlign: "center", gridColumn: "1/-1" }}>Loading Images...</p>
+  ) : filteredPosts.length > 0 ? (
+    filteredPosts.map((post) => {
+ 
+      const currentImgUrl = post.imageUrl; 
+      const isFavorite = favorites.includes(currentImgUrl);
 
-            return (
-              <div key={post.public_id} className="post-item3" style={{ position: 'relative' }}>
-                <img 
-                  src={imageUrl} 
-                  alt="Devotion Post"
-                  className="grid-img3"
-                  style={{ width: "100%", borderRadius: "10px", display: "block" }}
-                   onClick={() => handleImageClick(imageUrl)} 
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300'; }} 
-                />
-                <div
-                  className="fav-icon-overlay"
-                  onClick={(e) => toggleFavorite(e, imageUrl)}
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '10px',
-                    cursor: 'pointer',
-                    zIndex: 10,
-         
-                    borderRadius: '50%',
-                    padding: '5px',
-                    display: 'flex'
-                  }}
-                >
-                  <img
-                    src={isFavorite ? filledHeartIcon : vectorIcon}
-                    alt="heart"
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p style={{ textAlign: "center", gridColumn: "1/-1" }}>No images found.</p>
-        )}
-      </main>
+      return (
+   
+        <div key={post.id} className="post-item3" style={{ position: 'relative' }}>
+          <img 
+            src={currentImgUrl} 
+            alt={post.title || "Devotion Post"}
+            className="grid-img3"
+            style={{ width: "100%", borderRadius: "10px", display: "block" }}
+            onClick={() => handleImageClick(currentImgUrl)} 
+            onError={(e) => { e.target.src = 'https://via.placeholder.com/300'; }} 
+          />
+          <div
+            className="fav-icon-overlay"
+            onClick={(e) => toggleFavorite(e, currentImgUrl)}
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              right: '10px',
+              cursor: 'pointer',
+              zIndex: 10,
+              borderRadius: '50%',
+              padding: '5px',
+              display: 'flex'
+            }}
+          >
+            <img
+              src={isFavorite ? filledHeartIcon : vectorIcon}
+              alt="heart"
+              style={{ width: '20px', height: '20px' }}
+            />
+          </div>
+        </div>
+      );
+    })
+  ) : (
+    <p style={{ textAlign: "center", gridColumn: "1/-1" }}>No images found.</p>
+  )}
+</main>
      
      {selectedFullImage && (
        <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>

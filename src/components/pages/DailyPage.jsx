@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react"; 
-import axios from "axios";
 import "../styles/DailyPage.css";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs, query, where , doc ,getDoc} from "firebase/firestore";
+import { db } from "../../firebaseConfig"; 
+
 import backArrow from "../../assets/lefta.png";
 import menuIcon from "../../assets/menu.png"; 
 import vectorIcon from '../../assets/Vector1.png';
@@ -14,27 +16,32 @@ export default function DailyPage() {
   const [activeTab, setActiveTab] = useState("All");
   const [selectedLanguage, setSelectedLanguage] = useState("all_lang"); 
   const [showFilter, setShowFilter] = useState(false);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]); 
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // New State for Full Screen Preview
   const [selectedFullImage, setSelectedFullImage] = useState(null);
+  // 2. Fetch data from Firebase Firestore instead of Cloudinary
 
-  const cloudName = "dp3bcbwwt";
+useEffect(() => {
+  const fetchImages = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "postimg"));
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await axios.get(
-          `https://res.cloudinary.com/${cloudName}/image/list/daily_folder.json`
-        );
-        setImages(response.data.resources);
-      } catch (error) {
-        console.error("Images not load :", error);
-      }
-    };
-    fetchImages();
-  }, []);
+      const imgArray = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("Total docs found:", imgArray.length);
+      setImages(imgArray);
+
+    } catch (error) {
+      console.error("Firebase Error:", error);
+    }
+  };
+
+  fetchImages();
+}, []);
+
 
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("user_favorites");
@@ -53,10 +60,8 @@ export default function DailyPage() {
     localStorage.setItem("user_favorites", JSON.stringify(updatedFavorites));
   };
 
-const handleImageClick = (imgSrc) => {
+  const handleImageClick = (imgSrc) => {
     setSelectedFullImage(imgSrc);
-    
-    // Recent views logic
     const savedRecent = localStorage.getItem("recently_viewed");
     let recentArray = savedRecent ? JSON.parse(savedRecent) : [];
     recentArray = [imgSrc, ...recentArray.filter(img => img !== imgSrc)];
@@ -73,42 +78,36 @@ const handleImageClick = (imgSrc) => {
     });
   };
 
-  const filteredPosts = images.filter((post) => {
-    const pId = post.public_id.toLowerCase();
-    const query = searchQuery.toLowerCase().trim();
-    const matchesLanguage = selectedLanguage === "all_lang" || pId.includes(selectedLanguage);
 
-    if (query !== "") {
-      return pId.includes(query) || (post.tags && post.tags.some(tag => tag.toLowerCase().includes(query)));
-    }
-    if (activeTab === "All") return matchesLanguage;
-    const categorySearch = activeTab.toLowerCase().replace(/\s+/g, '_'); 
-    const matchesCategory = 
-      pId.includes(categorySearch) || 
-      (post.tags && post.tags.some(tag => tag.toLowerCase() === activeTab.toLowerCase())) ||
-      (activeTab === "Good Morning" && (pId.includes("gm") || pId.includes("morning"))) ||
-      (activeTab === "Good Night" && (pId.includes("gn") || pId.includes("night"))) ||
-      (activeTab === "Meals & Food" && pId.includes("meals")) || 
-      (activeTab === "Daily Quotes" && pId.includes("quotes")) || 
-      (activeTab === "Work & Productivity" && pId.includes("work")) ||
-      (activeTab === "Fitness & Health" && pId.includes("fitnees")) || 
-      (activeTab === "Evening Vibes" && pId.includes("good_evening")) || 
-      (activeTab === "Daily Gratitude" && pId.includes("gratitude"));
+const filteredPosts = images.filter((post) => {
+  const queryTerm = searchQuery.toLowerCase().trim();
+  
+  // .trim() removes the extra space in " Daily" and "language "
+  const postCategory = (post.category || "").trim();
+  const postSubCategory = (post.subCategory || "").trim();
+  const postLang = (post.language || post["language "] || "").toLowerCase().trim();
 
-    return matchesCategory && matchesLanguage;
-  });
+  const matchesLanguage = selectedLanguage === "all_lang" || postLang === selectedLanguage.toLowerCase();
+  
+  // This matches "Good Morning" even if there are hidden spaces
+  const matchesTab = (activeTab === "All") || (postSubCategory === activeTab);
+
+  const matchesSearch = queryTerm === "" || 
+    (post.title || "").toLowerCase().includes(queryTerm);
+
+  return matchesLanguage && matchesTab && matchesSearch;
+});
 
 
   const navigateImage = (direction) => {
-
-    const imageUrls = filteredPosts.map(post => `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`);
+    const imageUrls = filteredPosts.map(post => post.imageUrl);
     const currentIndex = imageUrls.indexOf(selectedFullImage);
 
     if (direction === "next") {
-      const nextIndex = (currentIndex + 1) % imageUrls.length; // Loops back to start
+      const nextIndex = (currentIndex + 1) % imageUrls.length;
       setSelectedFullImage(imageUrls[nextIndex]);
     } else {
-      const prevIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length; // Loops to end
+      const prevIndex = (currentIndex - 1 + imageUrls.length) % imageUrls.length;
       setSelectedFullImage(imageUrls[prevIndex]);
     }
   };
@@ -123,12 +122,7 @@ const handleImageClick = (imgSrc) => {
 
       <div className="cat-filter-header1">
         <div className="left-side1">
-          <img 
-            src={backArrow} 
-            alt="back" 
-            className="back-icon1" 
-            onClick={() => window.history.back()} 
-          />
+          <img src={backArrow} alt="back" className="back-icon1" onClick={() => window.history.back()} />
           <h3>Daily Posts</h3>
         </div>
 
@@ -148,24 +142,12 @@ const handleImageClick = (imgSrc) => {
                 </select>
               </div>
               <div className="filter-item1">
-                <label>Sort By</label>
-                <select>
-                  <option value="newest">Newest Post</option>
-                  <option value="oldest">Oldest Post</option>
-                </select>
-              </div>
-              <div className="filter-item1">
                 <label>Category</label>
                 <select value={activeTab} onChange={(e) => setActiveTab(e.target.value)}>
                   <option value="All">All</option>
                   <option value="Good Morning">Good Morning</option>
                   <option value="Good Night">Good Night</option>
                   <option value="Daily Quotes">Daily Quotes</option>
-                  <option value="Meals & Food">Meals & Food</option>
-                  <option value="Work & Productivity">Work & Productivity</option>
-                  <option value="Fitness & Health">Fitness & Health</option>
-                  <option value="Evening Vibes">Evening Vibes</option>
-                  <option value="Daily Gratitude">Daily Gratitude</option>
                 </select>
               </div>
             </div>
@@ -174,7 +156,7 @@ const handleImageClick = (imgSrc) => {
       </div>
 
       <div className="tab-container1">
-        {["All", "Good Morning", "Good Night", "Daily Quotes", "Meals & Food", "Work & Productivity", "Fitness & Health", "Evening Vibes","Daily Gratitude"].map((tab) => (
+        {["All", "Good Morning", "Good Night", "Daily Quotes"].map((tab) => (
           <button 
             key={tab}
             className={`tab ${activeTab === tab ? "active" : ""}`}
@@ -188,80 +170,57 @@ const handleImageClick = (imgSrc) => {
       <main className="posts-grid1">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => {
-            const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`;
+            const imageUrl = post.imageUrl; // Direct link from Firestore
             const isFavorite = favorites.includes(imageUrl);
             return (
-              <div key={post.public_id} className="post-item1">
+              <div key={post.id} className="post-item1">
                 <img 
-                  src={imageUrl} 
-                  alt="Daily Post"
+                  src={post.imageUrl} 
+                  alt={post.title || "Daily Post"}
                   className="grid-img1"
-                  onClick={() => handleImageClick(imageUrl)} 
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300'; }} 
+                  onClick={() => handleImageClick(post.imageUrl)} 
                 />
                 <div
                   className="fav-icon-overlay"
                   onClick={(e) => toggleFavorite(e, imageUrl)}
-                  style={{
-                    position: 'absolute', bottom: '10px', right: '10px', cursor: 'pointer', zIndex: 10,
-                    borderRadius: '50%', display: 'flex'
-                  }}
                 >
-                  <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '16px', height: '16px' }} />
+                  <img src={isFavorite ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '16px' }} />
                 </div>
               </div>
             );
           })
         ) : (
-          <p className="no-images-msg">Images loading or no images found...</p>
+          <p className="no-images-msg">No images found...</p>
         )}
       </main>
 
-{selectedFullImage && (
-  <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>
-    <div className="modal-content-container" onClick={(e) => e.stopPropagation()}>
-      <button className="modal-close-x" onClick={() => setSelectedFullImage(null)}>✕</button>
-      
-      {/* Left Arrow */}
-      <div className="modal-nav-arrow left" onClick={() => navigateImage("prev")}>
-        <img src={next} alt="prev" style={{ width: '15px', transform: 'rotate(0deg)' }} />
-      </div>
+      {selectedFullImage && (
+        <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>
+          <div className="modal-content-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-x" onClick={() => setSelectedFullImage(null)}>✕</button>
+            
+            <div className="modal-nav-arrow left" onClick={() => navigateImage("prev")}>
+              <img src={next} alt="prev" style={{ width: '15px' }} />
+            </div>
 
-      <div className="modal-image-wrapper" style={{ position: 'relative' }}>
-        <img src={selectedFullImage} alt="Big Size" className="full-view-img" />
-        
-        {/* Favorite Icon */}
-        <div
-          className="modal-fav-icon"
-          onClick={(e) => toggleFavorite(e, selectedFullImage)}
-          style={{
-            position: 'absolute', bottom: '20px', right: '20px', cursor: 'pointer',
-            borderRadius: '50%', padding: '10px', display: 'flex',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.2)', background: 'rgba(255,255,255,0.2)'
-          }}
-        >
-          <img 
-            src={favorites.includes(selectedFullImage) ? filledHeartIcon : vectorIcon} 
-            alt="heart" 
-            style={{ width: '24px', height: '24px' }} 
-          />
+            <div className="modal-image-wrapper">
+              <img src={selectedFullImage} alt="Big Size" className="full-view-img" />
+              <div className="modal-fav-icon" onClick={(e) => toggleFavorite(e, selectedFullImage)}>
+                <img src={favorites.includes(selectedFullImage) ? filledHeartIcon : vectorIcon} alt="heart" style={{ width: '24px' }} />
+              </div>
+            </div>
+
+            <div className="modal-nav-arrow right" onClick={() => navigateImage("next")}>
+              <img src={next} alt="next" style={{ width: '15px', transform: 'rotate(180deg)' }} />
+            </div>
+            
+            <div className="edit-navigation-arrow" onClick={handleNextToEdit}>
+              <span className="arrow-text">Continue</span>
+              <img src={backArrow} alt="next" className="arrow-icon-flip" />
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Right Arrow */}
-      <div className="modal-nav-arrow right" onClick={() => navigateImage("next")}>
-        <img src={next} alt="next" style={{ width: '15px', transform: 'rotate(180deg)' }} />
-      </div>
-      
-      {/* Edit/Continue Button */}
-      <div className="edit-navigation-arrow" onClick={handleNextToEdit}>
-        <span className="arrow-text">Continue</span>
-        <img src={backArrow} alt="next" className="arrow-icon-flip" />
-      </div>
+      )}
     </div>
-  </div>
-)}
-</div>
-    
   );
 }

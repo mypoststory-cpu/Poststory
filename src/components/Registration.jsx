@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Registration.css'; 
 import arrowImg from "../../src/assets/Arrow.png";
-import staticLogoImage from '../assets/Logo2.png'; 
+import staticLogoImage from '../assets/PostoryLogo_W.png'; 
 
-// 1. Firebase आणि Firestore संबंधित गोष्टी इम्पोर्ट करा
 import { db } from "../firebaseConfig"; 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -29,7 +28,6 @@ const Registration = () => {
   const handleRegistrationSubmit = async () => {
     const { name, email, mobile, surname, city } = formData;
 
-    // 2. व्हॅलिडेशन (तुमच्या मूळ कोडप्रमाणेच)
     if (!name || !email || !mobile || !termsAccepted) {
       alert("Please fill all required details and accept terms.");
       return;
@@ -54,8 +52,7 @@ const Registration = () => {
     }
 
     try {
-      // 3. Firestore मध्ये 'users' कलेक्शनमध्ये डेटा सेव्ह करणे
-      // मोबाईल नंबरचा उपयोग 'Document ID' म्हणून केला आहे
+
       await setDoc(doc(db, "users", mobile), {
         name,
         surname,
@@ -65,7 +62,7 @@ const Registration = () => {
         createdAt: new Date().toISOString()
       });
 
-      // 4. लोकल स्टोरेजमध्ये डेटा सेव्ह करा जेणेकरून Navbar मध्ये नाव दिसेल
+
       localStorage.setItem("userData", JSON.stringify(formData));
       localStorage.setItem("isLoggedIn", "true");
 
@@ -77,7 +74,16 @@ const Registration = () => {
       alert("Error saving data: " + error.message);
     }
   };
-
+useEffect(() => {
+  const googleData = JSON.parse(localStorage.getItem("tempGoogleData"));
+  if (googleData) {
+    setFormData(prev => ({
+      ...prev,
+      name: googleData.name,
+      email: googleData.email
+    }));
+  }
+}, []);
   return (
     <div className="registration-container">
       <div className="center-logo1">

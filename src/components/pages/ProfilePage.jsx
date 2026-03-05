@@ -12,15 +12,18 @@ export default function ProfilePage() {
   });
 
 useEffect(() => {
-   
-    const savedData = JSON.parse(localStorage.getItem("userData"));
-    if (savedData) {
-      setFormData(savedData);
-      if (savedData.profileImage) {
-        setProfileImage(savedData.profileImage);
-      }
-    }
-  }, []);
+  const savedData = JSON.parse(localStorage.getItem("userData"));
+  if (savedData) {
+    setFormData({
+      name: savedData.name || "",
+      surname: savedData.surname || "",
+      email: savedData.email || "",
+      city: savedData.city || "",
+      mobile: savedData.mobile || ""
+    });
+    setProfileImage(savedData.profileImage || null);
+  }
+}, []);
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];

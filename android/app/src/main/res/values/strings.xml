@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">post</string>
     <string name="title_activity_main">post</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="package_name">com.poststory.app</string>
+    <string name="custom_url_scheme">com.poststory.app</string>
+    <string name="server_client_id">882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com</string>
 </resources>

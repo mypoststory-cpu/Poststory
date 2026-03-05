@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"; 
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Days.css";
 import Navbar from "../Navbar";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
+import { db } from "../../firebaseConfig"; 
+
 import backArrow from "../../assets/lefta.png";
 import menuIcon from "../../assets/menu.png"; 
 import vectorIcon from '../../assets/Vector1.png'; 
@@ -17,29 +19,34 @@ export default function DailyPage() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // New State for Full Screen Preview
   const [selectedFullImage, setSelectedFullImage] = useState(null);
 
-
-  const cloudName = "dp3bcbwwt";
-
- 
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("user_favorites");
     return saved ? JSON.parse(saved) : [];
   });
 
+  // 1. Fetching logic updated to Firebase Firestore
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://res.cloudinary.com/${cloudName}/image/list/days_folder.json`
+        // 'Days' category चे फोटो फेच करण्यासाठी query
+        const q = query(
+            collection(db, "postimg"), 
+            where("category", "==", "Day"),
+            orderBy("createdAt", "desc")
         );
-        setImages(response.data.resources);
+        
+        const querySnapshot = await getDocs(q);
+        const imgArray = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        
+        setImages(imgArray);
       } catch (error) {
-        console.error("Images load error:", error);
+        console.error("Firebase load error:", error);
       } finally {
         setLoading(false); 
       }
@@ -60,23 +67,16 @@ export default function DailyPage() {
     });
   }, []);
 
-
-
- const handleImageClick = (imgSrc) => {
+  const handleImageClick = (imgSrc) => {
     setSelectedFullImage(imgSrc);
-    
-    // Recent views logic
     const savedRecent = localStorage.getItem("recently_viewed");
     let recentArray = savedRecent ? JSON.parse(savedRecent) : [];
     recentArray = [imgSrc, ...recentArray.filter(img => img !== imgSrc)];
     localStorage.setItem("recently_viewed", JSON.stringify(recentArray.slice(0, 20)));
   };
 
-const navigateImage = (direction) => {
-
-    const imageUrls = filteredPosts.map(post => `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`);
-    
- 
+  const navigateImage = (direction) => {
+    const imageUrls = filteredPosts.map(post => post.imageUrl);
     const currentIndex = imageUrls.indexOf(selectedFullImage);
 
     if (direction === "next") {
@@ -87,41 +87,26 @@ const navigateImage = (direction) => {
       setSelectedFullImage(imageUrls[prevIndex]);
     }
   };
+
   const handleNextToEdit = () => {
     navigate("/post-selection", { 
       state: { 
         postImg: selectedFullImage, 
-        categoryName: "Daily",
+        categoryName: "Day",
         subCategory: activeTab
       } 
     });
   };
-
- const filteredPosts = images.filter((img) => {
-  const pId = img.public_id.toLowerCase();
-  const query = searchQuery.toLowerCase().trim();
-
-  // 1. Language Filter
-  const matchesLanguage = selectedLanguage === "all_lang" || pId.includes(selectedLanguage.toLowerCase());
-  if (!matchesLanguage) return false;
-
-  // 2. Search Logic
-  if (query !== "") {
-    return pId.includes(query);
-  }
-
-  if (activeTab === "All") return true;
-  const cleanTab = activeTab.toLowerCase()
-    .replace(/[’'’]s/g, "")
-    .replace(/ /g, "_");
-
-  // Smart Matching
-  if (activeTab.includes("National")) {
-    const keywords = cleanTab.split("_").filter(word => word !== "day");
-    return keywords.every(word => pId.includes(word));
-  }
-  const simpleMatch = activeTab.toLowerCase().split(" ")[0];
-  return pId.includes(simpleMatch);
+// Replace the existing filter in Days.jsx
+const filteredPosts = images.filter((img) => {
+  const postCategory = (img.category || "").trim(); // Removes accidental spaces
+  const subCat = (img.subCategory || "").toLowerCase().trim();
+  const lang = (img.language || "").toLowerCase().trim();
+  
+  const matchesLanguage = selectedLanguage === "all_lang" || lang === selectedLanguage.toLowerCase();
+  
+  if (activeTab === "All") return matchesLanguage && postCategory === "Day";
+  return matchesLanguage && postCategory === "Day" && subCat === activeTab.toLowerCase();
 });
 
   const dayTabs = [
@@ -129,8 +114,7 @@ const navigateImage = (direction) => {
     "Children’s Day", "Mother’s Day", "Father’s Day", "Friendship Day", "Valentine’s Day",
     "Yoga Day", "Women’s Day", "National Youth Day", "National Doctors' Day", "Engineers' Day", 
     "Indian Army Day", "Kargil Vijay Diwas", "Daughter’s Day", "National Unity Day", 
-    "Kisan Diwas (Farmers Day)", "World Environment Day", "Relationship Days", 
-    "Family Tributes", "Awareness Days", "Fun & Quirky"
+    "Kisan Diwas", "World Environment Day", "Relationship Days"
   ];
 
   return (
@@ -143,7 +127,7 @@ const navigateImage = (direction) => {
 
       <div className="cat-filter-header2">
         <div className="left-side2">
-          <img src={backArrow} alt="back" className="back-icon2" onClick={() => window.history.back()} />
+          <img src={backArrow} alt="back" className="back-icon2" onClick={() => navigate(-1)} />
           <h3>Days Posts</h3>
         </div>
 
@@ -161,13 +145,6 @@ const navigateImage = (direction) => {
                   <option value="marathi">Marathi</option>
                   <option value="hindi">Hindi</option>
                   <option value="english">English</option>
-                </select>
-              </div>
-                   <div className="filter-item1">
-                <label>Sort By</label>
-                <select>
-                  <option value="newest">Newest Post</option>
-                  <option value="oldest">Oldest Post</option>
                 </select>
               </div>
               <div className="filter-item2">
@@ -198,34 +175,21 @@ const navigateImage = (direction) => {
           <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>Images Loading...</p>
         ) : filteredPosts.length > 0 ? (
           filteredPosts.map((post) => {
-            const imageUrl = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/${post.public_id}`;
-            const isFavorite = favorites.includes(imageUrl);
+            const isFavorite = favorites.includes(post.imageUrl);
 
             return (
-              <div key={post.public_id} className="post-item2" style={{ position: 'relative' }}>
+              <div key={post.id} className="post-item2" style={{ position: 'relative' }}>
                 <img 
-                  src={imageUrl} 
-                  alt="Days Post"
+                  src={post.imageUrl} 
+                  alt={post.title}
                   className="grid-img2"
                   style={{ width: "100%", borderRadius: "10px", display: "block" }}
-                 onClick={() => handleImageClick(imageUrl)}
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300'; }} 
-               />
-                
+                  onClick={() => handleImageClick(post.imageUrl)}
+                />
                 <div
                   className="fav-icon-overlay"
-                  onClick={(e) => toggleFavorite(e, imageUrl)}
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '10px',
-                    cursor: 'pointer',
-                    zIndex: 10,
-                  
-                    borderRadius: '50%',
-                
-                    display: 'flex'
-                  }}
+                  onClick={(e) => toggleFavorite(e, post.imageUrl)}
+                  style={{ position: 'absolute', bottom: '10px', right: '10px', cursor: 'pointer', zIndex: 10 }}
                 >
                   <img
                     src={isFavorite ? filledHeartIcon : vectorIcon}
@@ -237,53 +201,49 @@ const navigateImage = (direction) => {
             );
           })
         ) : (
-          <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>No images found for this selection.</p>
+          <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>No images found.</p>
         )}
       </main>
-    {selectedFullImage && (
-      <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>
-        <div className="modal-content-container" onClick={(e) => e.stopPropagation()}>
-          <button className="modal-close-x" onClick={() => setSelectedFullImage(null)}>✕</button>
-          
-          {/* Left Arrow */}
-          <div className="modal-nav-arrow left" onClick={() => navigateImage("prev")}>
-            <img src={next} alt="prev" style={{ width: '15px', transform: 'rotate(0deg)' }} />
-          </div>
-    
-          <div className="modal-image-wrapper" style={{ position: 'relative' }}>
-            <img src={selectedFullImage} alt="Big Size" className="full-view-img" />
+
+      {selectedFullImage && (
+        <div className="full-image-modal-overlay" onClick={() => setSelectedFullImage(null)}>
+          <div className="modal-content-container" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-x" onClick={() => setSelectedFullImage(null)}>✕</button>
             
-            {/* Favorite Icon */}
-            <div
-              className="modal-fav-icon"
-              onClick={(e) => toggleFavorite(e, selectedFullImage)}
-              style={{
-                position: 'absolute', bottom: '20px', right: '20px', cursor: 'pointer',
-                borderRadius: '50%', padding: '10px', display: 'flex',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.2)', background: 'rgba(255,255,255,0.2)'
-              }}
-            >
-              <img 
-                src={favorites.includes(selectedFullImage) ? filledHeartIcon : vectorIcon} 
-                alt="heart" 
-                style={{ width: '24px', height: '24px' }} 
-              />
+            <div className="modal-nav-arrow left" onClick={() => navigateImage("prev")}>
+              <img src={next} alt="prev" style={{ width: '15px' }} />
+            </div>
+    
+            <div className="modal-image-wrapper" style={{ position: 'relative' }}>
+              <img src={selectedFullImage} alt="Big Size" className="full-view-img" />
+              <div
+                className="modal-fav-icon"
+                onClick={(e) => toggleFavorite(e, selectedFullImage)}
+                style={{
+                  position: 'absolute', bottom: '20px', right: '20px', cursor: 'pointer',
+                  borderRadius: '50%', padding: '10px', display: 'flex',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.2)', background: 'rgba(255,255,255,0.2)'
+                }}
+              >
+                <img 
+                  src={favorites.includes(selectedFullImage) ? filledHeartIcon : vectorIcon} 
+                  alt="heart" 
+                  style={{ width: '24px', height: '24px' }} 
+                />
+              </div>
+            </div>
+    
+            <div className="modal-nav-arrow right" onClick={() => navigateImage("next")}>
+              <img src={next} alt="next" style={{ width: '15px', transform: 'rotate(180deg)' }} />
+            </div>
+            
+            <div className="edit-navigation-arrow" onClick={handleNextToEdit}>
+              <span className="arrow-text">Continue</span>
+              <img src={backArrow} alt="next" className="arrow-icon-flip" />
             </div>
           </div>
-    
-          {/* Right Arrow */}
-          <div className="modal-nav-arrow right" onClick={() => navigateImage("next")}>
-            <img src={next} alt="next" style={{ width: '15px', transform: 'rotate(180deg)' }} />
-          </div>
-          
-          {/* Edit/Continue Button */}
-          <div className="edit-navigation-arrow" onClick={handleNextToEdit}>
-            <span className="arrow-text">Continue</span>
-            <img src={backArrow} alt="next" className="arrow-icon-flip" />
-          </div>
         </div>
-      </div>
-    )}
-       </div>
-     );
-   }
+      )}
+    </div>
+  );
+}

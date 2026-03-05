@@ -1,5 +1,12 @@
 {
-  "appId": "com.example.app",
+  "appId": "com.poststory.app",
   "appName": "post",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+    "serverClientId": "882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
 }

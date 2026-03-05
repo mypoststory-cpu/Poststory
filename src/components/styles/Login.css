@@ -78,8 +78,8 @@
 }
 
 .static-logo-image {
-    width: 70%; 
-    height: 60%;
+    width: 80%; 
+    height: 80%;
     object-fit: contain;
     position: absolute;
     top: 50%;
@@ -219,7 +219,7 @@
 .center-animated-ring-wrapper1 {
     
     position: absolute;
-      bottom: -75%;       
+      bottom: -80%;       
     left: 0%;
     transform: translateX(-50%);
     width: 2000px; 

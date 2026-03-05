@@ -29,16 +29,16 @@ export default function Navbar({ onSearch }) {
  navigate("/login");
  };
 
-
- useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem("userData"));
-    if (savedData) {
-      setUserData({
-        name: savedData.name || "Guest",
-        profileImg: savedData.profileImage || null 
-      });
-    }
-  }, []);
+useEffect(() => {
+  const savedData = JSON.parse(localStorage.getItem("userData"));
+  if (savedData) {
+    setUserData({
+      name: savedData.name || "User",
+      profileImg: savedData.profileImage || savedData.profileImg || null,
+      mobile: savedData.mobile
+    });
+  }
+}, []);
 const goToHome = () => {
   navigate("/home");
 };

@@ -78,11 +78,11 @@
   align-items: flex-start;
 }
 .logo-text {
-     width: 120px;
+     width: 150px;
     height: auto;
     margin-top: 20px;
     object-fit: contain;
-    margin-bottom: -5px;
+    margin-bottom: 15px;
 
 }
 
@@ -215,7 +215,7 @@ width: 100px;
     line-height: 1.3;
     text-align: left;
     padding-bottom: 40px;
-    margin-left: 10px;
+
 }
 
 /* --- TERMS CHECKBOX --- */

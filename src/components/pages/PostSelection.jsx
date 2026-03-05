@@ -7,7 +7,12 @@ import editIcon from '../../assets/edit.png';
 import defaultUserPhoto from "../../assets/profile.jpg";
 import backArrow from "../../assets/lefta.png";
 import { sharePost } from "./shareService";
+import { db } from "../../firebaseConfig";
 
+import staticLogoImage from "../../assets/newlogo.png";
+// --- PostSelection.jsx ---
+// Update this line at the top of your file
+import { collection, addDoc, serverTimestamp, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 
 // Personal Assets
 import sig1 from "../../assets/PostStory Personal-01.png";
@@ -84,6 +89,7 @@ export default function PostSelection() {
     const navigate = useNavigate();
     const location = useLocation();
     const postRef = useRef(null);
+    const [userPlan, setUserPlan] = useState("free");
 
     const { postImg, categoryName, subCategory } = location.state || {};
     const savedProfile = JSON.parse(localStorage.getItem("userData")) || {};
@@ -151,20 +157,112 @@ const availablePersonalSigns = currentPlan === "free" ? personalSigns.slice(0, 3
         localStorage.setItem("tempEditorData", JSON.stringify(updatedData));
     }, [userName, userSubtitle, selectedSig]);
 
-// PostSelection.jsx
-const handleSocialShare = (platform) => {
-        if (currentPlan === "free" && platform !== "whatsapp") {
-            alert("In the free plan, only WhatsApp sharing is available. Please upgrade to access other platforms!");
-            navigate("/subscription");
-            return;
-        }
-     sharePost(postRef, customMessage, platform);
-    };
+
+    const handleWhatsAppShare = async () => {
+    await sharePost(postRef, customMessage, "whatsapp");
+    await handleSocialShare("whatsapp");
+};
+const handleSocialShare = async (platform) => {
+    const savedUser = JSON.parse(localStorage.getItem("userData"));
+    if (!savedUser?.mobile) {
+        alert("Please complete your profile with a mobile number first!");
+        return;
+    }
+
+    try {
+        await addDoc(collection(db, "user_history"), {
+            mobile: savedUser.mobile, 
+            platform: platform,       
+            img: postImg, // Updated from selectedImage to postImg
+            category: categoryName || "Daily Post",  
+            sub: subCategory || "Share",
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            timestamp: serverTimestamp() 
+        });
+        console.log("History Saved!");
+    } catch (error) {
+        console.error("Error saving history:", error);
+    }
+};
     const handleSaveImage = () => {
         alert("Saved Successfully! ✅");
         setIsEditingInfo(false);
     };
+    
+useEffect(() => {
+    const sigId = getSigId(selectedSig);
+    const allSavedData = JSON.parse(localStorage.getItem("tempEditorData")) || {};
+    if (allSavedData[sigId]) {
+        setUserName(allSavedData[sigId].name);
+        setUserSubtitle(allSavedData[sigId].surname);
+    }
+}, [selectedSig]);
 
+// ✅ इथे add कर
+
+useEffect(() => {
+    const fetchPostDescription = async () => {
+        if (!postImg) return;
+
+        try {
+            const postRef = collection(db, "postimg");
+            const querySnapshot = await getDocs(postRef);
+
+            const currentPost = querySnapshot.docs.find(doc => {
+                const data = doc.data();
+                return data.imageUrl === postImg;
+            });
+
+            if (currentPost) {
+                const postData = currentPost.data();
+
+                const title = postData.title || "";
+                const desc = postData.description || "";
+
+                setCustomMessage(`${title}\n${desc}`);
+
+                console.log("Post Found:", postData);
+            } else {
+                console.log("No matching post found");
+            }
+
+        } catch (error) {
+            console.error("Error fetching description:", error);
+        }
+    };
+
+    fetchPostDescription();
+}, [postImg]);
+useEffect(() => {
+    const fetchUserSubscription = async () => {
+        const savedUser = JSON.parse(localStorage.getItem("userData"));
+        if (!savedUser?.mobile) return;
+
+        try {
+            // Check Firestore for the latest subscription
+            const q = query(
+                collection(db, "subscriptions"),
+                where("mobile", "==", savedUser.mobile),
+                orderBy("timestamp", "desc"),
+                limit(1)
+            );
+            const querySnapshot = await getDocs(q);
+            
+            if (!querySnapshot.empty) {
+                const subData = querySnapshot.docs[0].data();
+                setUserPlan(subData.planId || "free");
+            } else {
+                setUserPlan("free");
+            }
+        } catch (error) {
+            console.error("Error fetching sub:", error);
+            setUserPlan("free"); // Default to free if check fails
+        }
+    };
+
+    fetchUserSubscription();
+}, []);
     return (
         <div className="selection-container">
             <Navbar />
@@ -183,35 +281,41 @@ const handleSocialShare = (platform) => {
             <div className="main-content-wrapper">
                 <div className={`preview-section ${isEditingInfo ? 'edit-mode-active' : ''}`}>
                 
-                    <div className={`preview-card sig-mode-${getSigId(selectedSig)}`} ref={postRef}>
-                        <img src={postImg} alt="main" className="main-post-img" />
-                        {/* --- Watermark for Free Plan --- */}
-                      {/* --- Watermark only for Free Plan --- */}
-                        {currentPlan === "free" && (
-                            <div className="preview-watermark">Created by [App Name]</div>
-                        )}
+         <div className={`preview-card sig-mode-${getSigId(selectedSig)}`} ref={postRef}>
+   <img 
+  src={postImg} 
+  alt="main"
+  className="main-post-img"
+  crossOrigin="anonymous"
+/>
+  
+    {/* --- UPDATED WATERMARK LOGO LOGIC --- */}
+    {currentPlan === "free" && (
+        <div className="watermark-top-right">
+            <img src={staticLogoImage} alt="Logo" className="watermark-icon" />
+           
+        </div>
+    )}
+    {/* ------------------------------------ */}
 
-                        {selectedSig && (
-                            <img src={selectedSig} alt="sig" className="sig-overlay-img" />
-                        )}
-                        {selectedSig && (
-                            <img src={selectedSig} alt="sig" className="sig-overlay-img" />
-                        )} 
+    {selectedSig && (
+        <img src={selectedSig} alt="sig" className="sig-overlay-img" />
+    )}
+    
+    {/* Rest of your profile and badge code... */}
+    {allowedProfileSigs.includes(selectedSig) && (
+        <div className="profile-wrapper clickable-profile" onClick={() => navigate("/profile")}>
+            <div className="profile-ring">
+                <img src={userPhoto} alt="user" className="user-avatar" />
+            </div>
+        </div>
+    )}
 
-                     
-                        {allowedProfileSigs.includes(selectedSig) && (
-                            <div className="profile-wrapper clickable-profile" onClick={() => navigate("/profile")} style={{ cursor: 'pointer' }}>
-                                <div className="profile-ring">
-                                    <img src={userPhoto} alt="user" className="user-avatar" />
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="badge-text-area">
-                            <h4 className="badge-name">{userName}</h4>
-                            <p className="badge-subtitle">{userSubtitle}</p>
-                        </div>
-                    </div>
+    <div className="badge-text-area">
+        <h4 className="badge-name">{userName}</h4>
+        <p className="badge-subtitle">{userSubtitle}</p>
+    </div>
+</div>
                 </div>
 
                 {!isEditingInfo && (
@@ -294,11 +398,10 @@ const handleSocialShare = (platform) => {
                     />
              <div className="share-grid">
     {/* WhatsApp */}
-    <div className="share-card whatsapp"
-onClick={() => sharePost(postRef, customMessage, "whatsapp")}>
-        <div className="social-icon"><img src={whatsappIcon} alt="W" /></div>
-        <button className="inner-share-btn">Share <span>▷</span></button>
-    </div>
+  <div className="share-card whatsapp" onClick={handleWhatsAppShare}>
+    <div className="social-icon"><img src={whatsappIcon} alt="W" /></div>
+    <button className="inner-share-btn">Share <span>▷</span></button>
+</div>
 
     {/* Instagram */}
     <div className="share-card instagram" onClick={() => handleSocialShare("instagram")}>

@@ -1,8 +1,7 @@
-// src/firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth"; // OTP साठी
-import { getFirestore } from "firebase/firestore"; // डेटा सेव्ह करण्यासाठी
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2QbJBoPTAulu9e7OLXXxDSqIIKYOZ2JE",
@@ -14,12 +13,11 @@ const firebaseConfig = {
   measurementId: "G-PSDB8XR7NJ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-// या दोन ओळी सर्वात महत्त्वाच्या आहेत, त्याशिवाय Login/Registration चालणार नाही
-export const auth = getAuth(app); 
-export const db = getFirestore(app); 
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+export const googleProvider = new GoogleAuthProvider();
 
 export default app;

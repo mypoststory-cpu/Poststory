@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function InstallApp() {
   const [installEvent, setInstallEvent] = useState(null);

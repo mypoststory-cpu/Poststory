@@ -75,7 +75,7 @@ export default function ForuPage() {
         <div className="banner-content1"></div>
       </div>
 
-      <div className="cat-filter-header1">
+      <div className="cat-filter-header1" style={{padding:'16px 20px'}}>
         <div className="left-side1">
           <img 
             src={backArrow} 

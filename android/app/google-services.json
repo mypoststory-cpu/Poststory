@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "882147774912",
+    "project_id": "allezpoststory",
+    "storage_bucket": "allezpoststory.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882147774912:android:afa165437c91a5274bb825",
+        "android_client_info": {
+          "package_name": "com.poststory.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882147774912-51l56jkk54looc7tpo0u0mqe0r6t0nh6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.poststory.app",
+            "certificate_hash": "1c9299e79156461dc40ee1c251787dd46334eade"
+          }
+        },
+        {
+          "client_id": "882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZshRZsWaEuYwSbGVbL-85WEtu1fieSps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

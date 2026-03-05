@@ -31,19 +31,21 @@
 
 
 .cat-filter-header8 {
-display: flex;
-  justify-content: space-between; 
-  align-items: center;           
-  border-top: 1.2px solid #BA7B03;
-  border-bottom: 1.2px solid #BA7B03; 
-  width: 100%;
-
-  padding-top: 0;
-  padding-bottom: 0;
+   display: flex;
+  align-items: center;
+  gap: 110px;
+  padding: 9px 20px;
+  border-bottom: 1px solid #ffa500;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #ffa500;
 }
 .left-side8 h3 {
+  font-size: 18px;
+  font-weight: 500;
   margin: 0;
-  padding: 15px 0;
+  white-space: nowrap; 
+
 }
 
 .back-icon1, .vector-img-main1 {

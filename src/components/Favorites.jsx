@@ -1,76 +1,90 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import './styles/Favorites.css';
 import Navbar from "./Navbar"; 
-import heartImg from '../assets/Home/2.png';
 import backArrowIcon from "../assets/lefta.png";
-import filledHeartIcon from "../assets/herat.png";
-
-const likedImages = [
-  "path_to_img1", "path_to_img2", "path_to_img3",
-  "path_to_img4", "path_to_img5", "path_to_img6",
-  "path_to_img7", "path_to_img8"
-];
 
 export default function Favorites() {
+  // 1. Ekach key vapra: "user_favorites"
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
-  // १. पेज लोड झाल्यावर LocalStorage मधून डेटा वाचणे
   useEffect(() => {
-    const savedFavs = JSON.parse(localStorage.getItem("favorites")) || [];
+    // Component load hotana data fatch kara
+    const savedFavs = JSON.parse(localStorage.getItem("user_favorites")) || [];
     setFavorites(savedFavs);
   }, []);
 
-  // २. डबल क्लिक केल्यावर इमेज काढून टाकण्याचे फंक्शन
-  const handleRemoveFavorite = (imgId) => {
-    const updatedFavs = favorites.filter((img) => img.public_id !== imgId);
-    setFavorites(updatedFavs); // स्टेट अपडेट करा
-    localStorage.setItem("favorites", JSON.stringify(updatedFavs)); // लोकल स्टोरेज अपडेट करा
-    alert("Removed from Favorites!");
+  const handleEditImage = (imgUrl) => {
+    navigate("/post-selection", { 
+      state: { 
+        postImg: imgUrl,
+        categoryName: "Favorite", 
+        subCategory: "My Post" 
+      } 
+    });
   };
-  const location = useLocation();
- 
-  const likedImages = JSON.parse(localStorage.getItem("user_favorites") || "[]");
+
+  const handleRemoveFavorite = (imgUrl) => {
+    const updatedFavs = favorites.filter((img) => img !== imgUrl);
+    setFavorites(updatedFavs); 
+    // Local storage update kara
+    localStorage.setItem("user_favorites", JSON.stringify(updatedFavs)); 
+  };
+
   return (
+
+
     <div className="favorites-container">
-     
       <div className="bottom-arc-container">
         <div className="bottom-arc-gradient"></div>
       </div>
 
-     
       <Navbar />
+<div className="cat-banner8">
+        <div className="banner-content8"></div>
+      </div>
 
-    
-      <section className="fav-banner">
-        <div className="banner-content">
-        
-        </div>
-      </section>
 
       <div className="liked-header">
-          <div className="left-side1">
-        <img 
-          src={backArrowIcon} 
-          className="back-arrow-img" 
-          onClick={() => window.history.back()} 
-        />
-        <h3>My Favorites ({likedImages.length})</h3>
-      </div>
+        <div className="left-side1">
+          <img 
+            src={backArrowIcon} 
+            className="back-arrow-img" 
+            onClick={() => navigate(-1)} 
+            alt="back"
+          />
+          {/* favorites.length use kara direct state madhun */}
+          <h3>My Favorites ({favorites.length})</h3>
+        </div>
       </div>
 
-
-    <main className="favorites-grid">
-        {likedImages.length > 0 ? (
-          likedImages.map((img, index) => (
+      <main className="favorites-grid">
+        {favorites.length > 0 ? (
+          favorites.map((img, index) => (
             <div key={index} className="fav-card">
-              <img src={img} alt="liked" className="fav-img" />
-            
+              <img 
+                src={img} 
+                alt="liked" 
+                className="fav-img" 
+                onClick={() => handleEditImage(img)} 
+                style={{ cursor: 'pointer' }} 
+              />
+              <button 
+                className="remove-fav-btn" 
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  handleRemoveFavorite(img);
+                }}
+              >
+                &times;
+              </button>
             </div>
           ))
         ) : (
-          <p style={{ textAlign: 'center', marginTop: '50px' }}>No favorites added yet!</p>
+          <p style={{ textAlign: 'center', marginTop: '50px', color: 'white' }}>
+            No favorites added yet!
+          </p>
         )}
       </main>
     </div>
