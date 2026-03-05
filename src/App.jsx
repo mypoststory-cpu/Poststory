@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 import SplashContent from "./components/SplashContent";
 import GradientBackground from "./components/GradientBackground";
@@ -22,7 +22,7 @@ import Foru from"./components/pages/Foru";
 import PostSelection from "./components/pages/PostSelection";
 import ProfilePage from "./components/pages/ProfilePage";
 import HistoryPage from "./components/pages/HistoryPage";
-import Admin from "./components/Admin";
+
 import Subscription from "./components/pages/Subscription";
 import InstallApp from "./components/InstallApp";
 import SearchPage from "./components/pages/SearchPage";
@@ -31,14 +31,44 @@ import TermsOfService from "./components/pages/TermsOfService";
 import PrivacyPolicy from "./components/pages/PrivacyPolicy";
 import HelpFeedback from "./components/pages/HelpFeedback";
 import MySubscription from "./components/pages/MySubscription";
-import AdminUpload from "./components/pages/AdminUpload";
-import AdminBulkUpload from "./components/pages/AdminBulkUpload";
+import AdminBulkUpload from "./admin/AdminBulkUpload";
+import AdminDashboard from "./admin/AdminDashboard";
+import AdminLogin from "./admin/AdminLogin";
+import AdminRoute from "./admin/AdminRoute";
+import AdminUpload from "./admin/AdminUpload";
 
 
 export default function App() {
   return (
     <>
     <Routes>
+<Route path="/admin/login" element={<AdminLogin />} />
+
+<Route
+ path="/admin/dashboard"
+ element={
+   <AdminRoute>
+     <AdminDashboard />
+   </AdminRoute>
+ }
+/>
+
+<Route
+ path="/admin/upload"
+ element={
+   <AdminRoute>
+     <AdminUpload />
+   </AdminRoute>
+ }
+/>
+<Route
+  path="/admin/bulk-upload"
+  element={
+    <AdminRoute>
+      <AdminBulkUpload />
+    </AdminRoute>
+  }
+/>
       <Route path="/" element={<Welcome />} />
       <Route path="/login" element={<Login />} />
     <Route path="/registration" element={<Registration/>} />
@@ -57,7 +87,7 @@ export default function App() {
    <Route path="/post-selection" element={<PostSelection />} />
    <Route path="/profile" element={<ProfilePage />} />
   <Route path="/history" element={<HistoryPage />} />
-  <Route path="/admin-upload" element={<Admin />} />
+
 <Route path="/subscription" element={<Subscription />} />
 <Route path="/search" element={<SearchPage />} />
 <Route path="/signatureselection" element={<SignatureSelection/>}/>
