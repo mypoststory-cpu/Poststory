@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { db, storage } from "../../firebaseConfig";
+import { db, storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { checkAdmin } from "../../checkAdmin";
+import { checkAdmin } from "../checkAdmin";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminBulkUpload() {
@@ -10,7 +10,6 @@ export default function AdminBulkUpload() {
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
-  // --- इथून जुन्या चुकीच्या ओळी (Line 15-16) काढून टाकल्या आहेत ---
 
   const handleFiles = (e) => {
     const selectedFiles = Array.from(e.target.files);
