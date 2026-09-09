@@ -5,8 +5,8 @@ export default function InstallApp() {
 
   useEffect(() => {
     const handler = (e) => {
-      e.preventDefault(); // ❌ Chrome popup थांबवतो
-      setInstallEvent(e); // ✅ आपण control घेतो
+      e.preventDefault(); 
+      setInstallEvent(e);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
@@ -24,7 +24,7 @@ export default function InstallApp() {
     setInstallEvent(null);
   };
 
-  // ❗ install possible नसेल तर buttonच नको
+
   if (!installEvent) return null;
 
   return (

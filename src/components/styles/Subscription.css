@@ -28,7 +28,7 @@ margin-top: 20px;
 
 .main-title {
 text-align: center;
-  font-size: 26px;
+  font-size: 25px;
   margin: 30px 0;
   font-weight: bold;
 }
@@ -43,9 +43,9 @@ text-align: center;
 .plan-tabs-header {
 display: flex;
     justify-content: space-around;
-    padding: 15px 0;
+    padding: 15px 10px;
     border-bottom: 1.5px solid #333;
-    font-size: 18px;
+    font-size: 15px;
     background: black;
     border-radius: 12px;
 }
@@ -73,9 +73,9 @@ display: flex;
 
 .table-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #333;
   font-size: 15px;
 }
 
@@ -83,8 +83,14 @@ display: flex;
   border-bottom: none;
 }
 
-.row-label { color: #fff; font-weight: 500; }
-.row-value { color: #888; text-align: right; }
+.row-label {
+  width: 140px;   /* label fixed width */
+  color: #fff;
+}
+
+.row-value {
+  color:#d3cbcb;
+}
 
 .annual-banner {
   background: #000;

@@ -1,245 +1,206 @@
-// src/components/Login.jsx
-
-import React, { useState , useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./styles/Login.css";
-import staticLogoImage from "../assets/PostoryLogo_W.png";
+import staticLogoImage from "../assets/Logo2.png";
 import arrowImg from "../../src/assets/Arrow.png";
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import Swal from 'sweetalert2';
 import { checkAdmin } from "../checkAdmin";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  RecaptchaVerifier,      // Add this
-  signInWithPhoneNumber    // Add this
-} from "firebase/auth";
+import axios from "axios";
 
-// Firebase
-import { auth, db } from "../firebaseConfig";
-
-import { doc, getDoc } from "firebase/firestore";
+// Firebase Firestore
+import { db } from "../firebaseConfig";
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState(null);
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Setup Recaptcha
- const setupRecaptcha = () => {
-  if (!window.recaptchaVerifier) {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container", // Make sure this ID matches your <div> id
-      {
-        size: "invisible",
-        callback: (response) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-        },
+  // Cloud Functions Base URL (Matches your Registration component)
+  const REGION_URL = "https://us-central1-allezpoststory.cloudfunctions.net";
+
+ const handleSendOtp = async () => {
+    try {
+      setLoading(true);
+      const cleanMobile = mobileNumber.replace(/\D/g, '').slice(-10); 
+      
+      if (cleanMobile.length < 10) {
+        alert("Please enter a valid 10-digit number.");
+        setLoading(false);
+        return;
       }
-    );
-  }
-};
 
-  // Send OTP
-  const handleSendOtp = async () => {
-    if (mobileNumber.length !== 10) {
-      alert("Please enter a 10-digit mobile number");
+      // Call Firebase Cloud Function to send SMS via Twilio
+      const response = await axios.post(`${REGION_URL}/sendTwilioOTP`, {
+        phone: `+91${cleanMobile}`
+      });
+
+      if (response.data.success) {
+        // REMOVED: Frontend no longer needs to write to Firestore here, 
+        // because your backend cloud function already safely saved the OTP code!
+
+        setIsOtpSent(true);
+        Swal.fire({
+          title: 'OTP sent successfully! 📱',
+          background: 'rgba(255, 255, 255, 0.2)', 
+          color: '#ffffff',
+          backdrop: 'rgba(0, 0, 0, 0.4)', 
+          showConfirmButton: false,
+          timer: 2000,
+          customClass: { popup: 'transparent-alert' }
+        });
+      }
+    } catch (error) {
+      console.error("Auth Error:", error);
+      alert("Error: " + (error.response?.data?.error || error.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+const handleVerifyOtp = async () => {
+    // 10-digit format for Firestore users collection & admin check
+    const rawMobile = mobileNumber.replace(/\D/g, '').slice(-10);
+    // +91 format for the OTP collection lookup
+    const cleanPhone = `+91${rawMobile}`; 
+    const cleanOtp = otp.replace(/\s/g, '').trim();
+
+    if (!cleanOtp || cleanOtp.length !== 6) {
+      alert("Please enter the 6-digit OTP");
       return;
+    }
+    
+    setLoading(true);
+
+    try {
+      // Verify OTP from Firestore using the +91 format
+      const docRef = await getDoc(doc(db, "otps", cleanPhone));
+
+      if (!docRef.exists()) {
+        alert("OTP expired or not found.");
+        setLoading(false);
+        return;
+      }
+
+      const data = docRef.data();
+      if (data.otp !== cleanOtp) {
+        alert("Invalid OTP entered.");
+        setLoading(false);
+        return;
+      }
+
+      // Delete OTP after successful verification
+      await deleteDoc(doc(db, "otps", cleanPhone));
+
+    } catch (authError) {
+      console.error("Code Verification Failed:", authError);
+      alert("Wrong OTP entered or expired. Please check.");
+      setLoading(false);
+      return; 
     }
 
     try {
-      setupRecaptcha();
-      const phoneNumber = "+91" + mobileNumber;
-      const appVerifier = window.recaptchaVerifier;
+      // ADMIN CHECK (uses 10-digit rawMobile)
+      const isAdminStatus = await checkAdmin(rawMobile); 
 
-      const result = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        appVerifier
-      );
+      if (isAdminStatus === true) {
+        localStorage.setItem("userPhone", rawMobile);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("isAdmin", "true");
+        alert("Admin Access Granted! ✅");
+        navigate("/home"); 
+        return;
+      }
 
-      setConfirmationResult(result);
-      setIsOtpSent(true);
-      alert("OTP sent!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to send OTP");
+      // FIRESTORE USER CHECK (uses 10-digit rawMobile to match your screenshot)
+      const userDoc = await getDoc(doc(db, "users", rawMobile));
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        localStorage.setItem("userData", JSON.stringify(userData));
+        localStorage.setItem("userPhone", rawMobile);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.removeItem("isAdmin");
+        
+        navigate("/home");
+      } else {
+        alert("Your number is not registered. Redirecting to Registration.");
+        localStorage.setItem("tempMobile", rawMobile);
+        navigate("/registration");
+      }
+
+    } catch (dbError) {
+      console.error("Database Check Error:", dbError);
+      alert("Database error, please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-const handleVerifyOtp = async () => {
-  if (!confirmationResult) {
-    alert("Please request OTP first");
-    return;
-  }
-
-  try {
-    // 1. Confirm OTP
-    await confirmationResult.confirm(otp);
-
-    // 2. IMPORTANT: You must 'await' the result of checkAdmin
-    // Since your DB has "9860098958", this will now return true
-    const isAdminStatus = await checkAdmin(mobileNumber); 
-
-    if (isAdminStatus === true) {
-      // Clear any old user data and set Admin flags
-      localStorage.setItem("userPhone", mobileNumber);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("isAdmin", "true");
-      
-      alert("Admin Access Granted! ✅");
-      
-      // Navigate to the Bulk Upload page
-      navigate("/admin-bulk-upload"); 
-      return; // Stop the function here so it doesn't run the 'user' logic below
-    }
-
-    // 3. This part ONLY runs if isAdminStatus is false
-    const userDoc = await getDoc(doc(db, "users", mobileNumber));
-
-    if (userDoc.exists()) {
-      localStorage.setItem("userData", JSON.stringify(userDoc.data()));
-      localStorage.setItem("userPhone", mobileNumber);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.removeItem("isAdmin"); // Ensure they are not marked as admin
-      navigate("/home");
-    } else {
-      alert("Number not registered. Please Sign Up.");
-      navigate("/registration");
-    }
-
-  } catch (error) {
-    console.error("Login Error:", error);
-    alert("Invalid OTP or Verification Failed");
-  }
-};
-const handleGoogleLogin = async () => {
-  try {
-    await GoogleAuth.initialize({
-      clientId: '882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com',
-    });
-
-    const googleUser = await GoogleAuth.signIn();
-    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-    const result = await signInWithCredential(auth, credential);
-    const user = result.user;
-
-    // Check kara ki ha email user collection madhe aahe ka?
-    const q = query(collection(db, "users"), where("email", "==", user.email));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      // User aadhi pasun aahe, direct login
-      const userData = querySnapshot.docs[0].data();
-      localStorage.setItem("userData", JSON.stringify(userData));
-      localStorage.setItem("isLoggedIn", "true");
-      navigate("/home");
-    } else {
-
-      const tempGoogleData = {
-        name: user.displayName,
-        email: user.email,
-        profileImage: user.photoURL
-      };
-      localStorage.setItem("tempGoogleData", JSON.stringify(tempGoogleData));
-      
-  
-      navigate("/registration");
-    }
-  } catch (error) {
-    console.error("Google Login Error:", error);
-  }
-};
   return (
     <div className="login-container1">
-      <div id="recaptcha-container"></div>
-
       <div className="top-bar"></div>
-
       <h2 className="header-message">Share your Post, Easily.</h2>
 
       <div className="center-logo">
         <div className="logo-circle">
-          <img
-            src={staticLogoImage}
-            alt="Post Story Logo"
-            className="static-logo-image"
-          />
+          <img src={staticLogoImage} alt="Logo" className="static-logo-image" />
         </div>
       </div>
 
       <h3 className="head">Login</h3>
 
-      {/* Mobile Input */}
       <div className="input-group1">
         <input
           type="tel"
           placeholder="Mobile number"
           className="rounded-input1"
           value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
+          onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))} 
           maxLength="10"
-          disabled={isOtpSent}
+          disabled={isOtpSent || loading}
         />
         <img
           src={arrowImg}
-          alt="arrow"
+          alt="send"
           className="input-icon"
-          onClick={handleSendOtp}
-          style={{ cursor: "pointer" }}
+          onClick={!loading ? handleSendOtp : null}
+          style={{ cursor: loading ? "not-allowed" : "pointer" }}
         />
       </div>
 
-      {/* OTP Input */}
       <div className="input-group1">
         <input
-          type="text"
+          type="tel"
           placeholder="OTP"
           className="rounded-input1"
           value={otp}
-          onChange={(e) => setOtp(e.target.value)}
+          onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
           maxLength="6"
+          disabled={!isOtpSent || loading}
         />
         <img
           src={arrowImg}
-          alt="arrow"
+          alt="verify"
           className="input-icon"
-          onClick={handleVerifyOtp}
-          style={{ cursor: "pointer" }}
+          onClick={!loading ? handleVerifyOtp : null}
+          style={{ cursor: loading ? "not-allowed" : "pointer" }}
         />
       </div>
 
-      <p
-        className="resend-otp"
-        onClick={handleSendOtp}
-        style={{ cursor: "pointer" }}
-      >
-        Resend OTP
+      <p className="resend-otp" onClick={!loading ? handleSendOtp : null}>
+        {loading ? "Please wait..." : "Resend OTP"}
       </p>
 
       <div className="not-registered">
-        Not have an account?
-        <Link to="/registration" className="sign-up-link">
-          SIGN UP
-        </Link>
+        Not have an account? <p></p>
+        <Link to="/registration" className="sign-up-link">SIGN UP</Link>
       </div>
-
-      <p className="or-sign-up">or Sign Up Using</p>
-
-      <div className="google-login-placeholder" onClick={handleGoogleLogin}>
-     
-      </div>
-
-      <div className="bottom-arc-container">
-        <div className="bottom-arc-gradient"></div>
-      </div>
-
-      <div className="center-animated-ring-wrapper1">
-        <div className="center-animated-ring1"></div>
-      </div>
+ 
+      <div className="bottom-arc-container"><div className="bottom-arc-gradient"></div></div>
+      <div className="center-animated-ring-wrapper1"><div className="center-animated-ring1"></div></div>
     </div>
   );
 };

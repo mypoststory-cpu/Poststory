@@ -47,10 +47,11 @@ export default function HistoryPage() {
   }, []);
 const handleImageClick = (item) => {
   navigate("/post-selection", { 
-    state: {
-      postImg: item.img,
-      categoryName: item.category || "Daily Post",
-      subCategory: item.sub || "Share"
+     state: {
+        postImg: post.imageUrl,       
+        categoryName: post.category,   
+        subCategory: post.subCategory,
+        description: post.description  
     }
   });
 };

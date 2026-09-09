@@ -15,6 +15,29 @@ margin-top: 20px;
   padding-left: 20px;
 }
 
+.comparison-table .table-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  border-bottom: 1px solid #222 !important;
+}
+
+
+.comparison-table .row-label {
+  font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
+.comparison-table .row-value {
+  font-size: 14px;
+  color: #fff;
+  text-align: right !important;
+  white-space: nowrap;     
+  font-weight: 500;
+}
 
 .my-sub-content {
   padding: 20px;

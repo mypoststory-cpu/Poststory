@@ -7,14 +7,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:882147774912:android:afa165437c91a5274bb825",
+        "mobilesdk_app_id": "1:882147774912:android:987a6323d7ca475e4bb825",
         "android_client_info": {
           "package_name": "com.poststory.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "882147774912-51l56jkk54looc7tpo0u0mqe0r6t0nh6.apps.googleusercontent.com",
+          "client_id": "882147774912-mohpe2mcan7v3sdu78hpukos6se22u9r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.poststory.app",

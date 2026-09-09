@@ -36,9 +36,9 @@
    display: flex;
   align-items: center;
   gap: 110px;
-  padding: 9px 20px;
+  padding: 5px 20px;
   border-bottom: 1px solid #ffa500;
-  margin-bottom: 20px;
+  
   margin-top: 20px;
   border-top: 1px solid #ffa500;
 }
@@ -76,8 +76,9 @@
 }
 
 .right-side4 {
-    display: flex;
-    justify-content: flex-end;
+ display: flex;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .filter-controls4 {
@@ -86,13 +87,11 @@
 }
 
 .filter-trigger4 {
-    display: flex;
-    align-items: center;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    border-radius: 20px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .vector-img-main4 {

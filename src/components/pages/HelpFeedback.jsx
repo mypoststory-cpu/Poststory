@@ -26,7 +26,7 @@ export default function HelpFeedback() {
         <img 
           src={backArrow} 
           alt="back" 
-          className="back-btn" 
+          className="back-icon6"
           onClick={() => navigate(-1)} 
         />
         <h3>Help & Feedback</h3>

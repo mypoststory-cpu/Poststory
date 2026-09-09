@@ -1,4 +1,4 @@
-/* src/components/styles/Login.css - REVISED */
+/* src/components/styles/Login.css - REVISED & UPDATED */
 .login-container1, 
 .login-container1 *, 
 .login-container1 input, 
@@ -6,28 +6,27 @@
 .login-container1 a {
     font-family: Arial, Helvetica, sans-serif !important;
 }
+
 .login-container1 {
-   
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
     width: 100%;
-    
-    background: radial-gradient(circle at center top, #000000 0%, #292525 70%, #6d6666 100%);
+    min-height: 100svh;
+    background: radial-gradient(circle at center top, #000000 0%, #292525 70%, #6d6666 100%) !important;
     color: #ffffff;
     padding-top: 30px;
     box-sizing: border-box;
     position: relative;
     z-index: 5;
-    
+    overflow: hidden;
 }
 
-.input-group, .not-registered, .or-sign-up, .google-login-placeholder {
+.input-group1, .not-registered, .or-sign-up, .google-login-placeholder, .resend-otp {
     position: relative; 
     z-index: 10; 
 }
-
 
 .top-bar {
     position: absolute;
@@ -40,10 +39,16 @@
     color: #999999;
 }
 
+.transparent-alert {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); 
+}
 .post-story-label {
     display: none; 
 }
-
 
 .header-message { 
     font-size: 1.1rem;
@@ -53,7 +58,6 @@
     margin-bottom: 30px; 
     margin-top: 20px;
 }
-
 
 @keyframes spin {
     from { transform: rotate(0deg); }
@@ -88,151 +92,164 @@
     animation: counter-spin 10s linear infinite; 
 }
 
-/* --- LOGIN HEADLINE (Mobile Alignment Fix) --- */
-.login-container h3 {
-    font-size: 1.2rem; 
-    font-weight: 100;
-    margin-bottom: 6px; 
-  margin-top: 80px;
-    width: 85%; /* Match input width */
-    max-width: 350px; /* Match input max-width */
+/* --- LOGIN HEADLINE --- */
+.login-container1 h3.head {
+    font-size: 1.4rem; 
+    font-weight: bold;
+    margin-bottom: 12px; 
+    margin-top: 40px;
+    width: 80%; 
+    max-width: 250px; 
     text-align: left;
-      letter-spacing: 1px;
-      color: #B3B0B0;
+    letter-spacing: 1px;
+    color: #c7bfbf; 
 }
-
-.head {
-
-    width: 85%; /* Adjusted for alignment */
-    max-width: 350px; /* Adjusted for alignment */
-    text-align: left; 
-    padding-left: 90px;
-    margin-bottom: 9px;
-}
-
 
 .input-group1 {
-   
     width: 80%;
     max-width: 300px;
-    margin-bottom: 10px; 
+    margin-bottom: 15px; 
     position: relative;
-  
 }
 
 .rounded-input1 {
-
     width: 100%;
-    padding: 14px 20px;
- border: 1px solid #BA7B03;
+    padding: 14px 50px 14px 20px; 
+       border: 1px solid #BA7B03;
     border-radius: 30px;
-    background-color: #ffffff;
-    color: #000000;
+ background-color: #222222; 
+ color: #ffffff; 
     font-size: 0.9rem;
     box-sizing: border-box;
-    font-style: italic;
 }
 
-
+.rounded-input1:focus {
+    outline: none;
+    border: 2px solid #ff9d00;
+}
 
 .input-icon {
     position: absolute;
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #d3841d; 
-    font-size: 1.2rem;
     cursor: pointer;
-    width: 30px;
+    width: 24px;
+    height: auto;
+    transition: transform 0.2s ease;
 }
 
+.input-icon:active {
+    transform: translateY(-50%) scale(0.9); 
+}
 
 .resend-otp {
     text-align: right;
-    font-size: 0.8rem;
-    color: #999999; 
-    margin: 0px auto 0 auto; 
-    width: 85%;
-    max-width: 350px;
-    padding-right: 35px; 
-    box-sizing: border-box;
+    font-size: 0.85rem;
+    color: #BA7B03; 
+    margin-top: -5px;
+    margin-bottom: 20px;
+    width: 80%;
+    max-width: 300px;
+    font-weight: 600;
     cursor: pointer;
 }
 
-
 .not-registered {
-    margin-top: 40px; 
-    font-size: 0.9rem; 
+    margin-top: 30px; 
+    font-size: 0.95rem; 
     color: #ffffff;
     text-align: center;
-    font-weight:initial;
 }
 
 .sign-up-link {
-    color: #ffffff;
+    color: #BA7B03;
     font-weight: 700;
     text-decoration: none;
     margin-left: 5px;
-   display: block;  
     cursor: pointer;
-      margin-top: 6px;
+    display: inline-block;
+}
+
+.sign-up-link:hover {
+    text-decoration: underline;
 }
 
 .or-sign-up {
-    margin-top: 15px;
+    margin-top: 25px;
     margin-bottom: 15px;
     font-size: 0.9rem;
     color: #c7c7c7;
-      
 }
 
 
 .google-login-placeholder {
-    width: 40px;
-    height: 40px;
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png'); 
+    width: 50%;
+    max-width: 300px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.google-login-placeholder:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.google-login-placeholder::before {
+    content: "";
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    cursor: pointer;
 }
 
-
 .bottom-arc-container {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
+    left: 0;
     display: flex;
     justify-content: center;
     z-index: 0; 
+    pointer-events: none;
 }
 
 .bottom-arc-gradient {
     width: 150%; 
     height: 300px;
     border-radius: 50%;
-  
     opacity: 0.7;
     transform: translateY(50%);
 }
 
 .center-animated-ring-wrapper1 {
-    
-    position: absolute;
-      bottom: -80%;       
+    position: fixed;
+    bottom: -700px;      
     left: 0%;
     transform: translateX(-50%);
-    width: 2000px; 
-    height: 2000px;
+    width: 1000px; 
+    height: 1000px;
     max-width: 130vw;
     max-height: 180vw;
     z-index: 1;
+    pointer-events: none; 
+}
 
-     pointer-events: none; 
+@keyframes rotate360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .center-animated-ring1 {
-    
     width: 175%;
     height: 100%;
     background-image: url('../../assets/LogoB.png'); 
@@ -240,23 +257,19 @@
     background-repeat: no-repeat;
     background-position: center;
     animation: rotate360 40s linear infinite; 
-     opacity: 0.9;   
+    opacity: 0.15; 
 }
 
 /* ==================================== */
 /* 🖥️ DESKTOP/TABLET MEDIA QUERY */
 /* ==================================== */
 @media (min-width: 768px) {
-    
-    .login-container {
-    
+    .login-container1 {
         padding-top: 0;
-    
         justify-content: center;
     }
 
     .top-bar {
-       
         justify-content: space-between;
         right: auto;
         left: 50%;
@@ -271,20 +284,6 @@
         font-weight: 500;
     }
 
-   
-    .center-content-desktop {
-      
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        max-width: 400px;
-        padding: 30px;
-        border-radius: 10px;
-        background-color: #1a1a1a; 
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-    
     .logo-circle {
         margin-bottom: 20px;
         width: 100px; 
@@ -296,21 +295,18 @@
         margin-bottom: 20px;
     }
 
-    .login-container h3, .head {
-       
+    .login-container1 h3.head {
         text-align: center;
         width: 100%;
         max-width: 350px;
         margin-bottom: 20px;
     }
     
-   
-    .input-group, 
+    .input-group1, 
     .resend-otp,
     .not-registered,
     .or-sign-up,
     .google-login-placeholder {
-   
         width: 100%;
         max-width: 350px;
         margin-left: auto;
@@ -320,6 +316,4 @@
     .resend-otp {
         padding-right: 0; 
     }
-    
-  
 }

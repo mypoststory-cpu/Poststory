@@ -15,7 +15,7 @@ export default function TermsOfService() {
         <img 
           src={backArrow} 
           alt="back" 
-          className="back-btn" 
+          className="back-icon6"
           onClick={() => navigate(-1)} 
         />
         <h3>Terms of Service</h3>

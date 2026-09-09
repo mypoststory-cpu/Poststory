@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
         <img 
           src={backArrow} 
           alt="back" 
-          className="back-btn" 
+         className="back-icon6"
           onClick={() => navigate(-1)} 
         />
         <h3>Privacy Policy</h3>
@@ -88,9 +88,15 @@ export default function PrivacyPolicy() {
               If you are under 18 years old, we need verifiable permission from your parent or guardian to use your information. We do not track children or show them targeted ads.
             </p>
           </section>
+          <section className="policy-section">
+            <h2>7. Child Safety Standards & CSAE Policy</h2>
+            <p>
+              <strong>Post Story</strong> strictly prohibits any form of Child Sexual Abuse and Exploitation (CSAE). We maintain a zero-tolerance policy against the creation, distribution, or promotion of any content that harms or exploits minors. If you encounter any violations, inappropriate material, or wish to report a child safety concern within Post Story, please contact our safety team immediately at mypoststory.gmail.com.
+            </p>
+          </section>
 
           <section className="policy-section contact-section">
-            <h2>7. Contact Us</h2>
+            <h2>8. Contact Us</h2>
             <p>If you have questions or complaints, contact our Grievance Officer:</p>
             <div className="contact-box">
               <p><strong>Email:</strong> mypoststory@gmail.com</p>

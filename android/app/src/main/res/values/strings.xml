@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">post</string>
-    <string name="title_activity_main">post</string>
+    <string name="app_name">Post Story</string>
+    <string name="title_activity_main">Post Story</string>
     <string name="package_name">com.poststory.app</string>
     <string name="custom_url_scheme">com.poststory.app</string>
-    <string name="server_client_id">882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com</string>
+    <string name="server_client_id">882147774912-mohpe2mcan7v3sdu78hpukos6se22u9r.apps.googleusercontent.com</string>
 </resources>

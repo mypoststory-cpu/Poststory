@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import "../styles/ProfilePage.css";
 import Navbar from "../Navbar"; 
 import backArrow from "../../assets/lefta.png";
-import defaultProfileImg from "../../assets/profile.jpg";
-
+import defaultProfileImg from "../../assets/camera.png";
+import icon from "../../assets/edit.png";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
+import { storage, db } from "../../firebaseConfig"; //
 
 export default function ProfilePage() {
   const [profileImage, setProfileImage] = useState(null);
@@ -47,6 +50,35 @@ useEffect(() => {
     alert("Profile Updated Successfully!");
     window.location.reload(); 
   };
+
+  const handleImageUpload = async (file) => {
+    const savedUser = JSON.parse(localStorage.getItem("userData"));
+    if (!savedUser?.mobile) return;
+
+    try {
+
+        const storageRef = ref(storage, `profile_images/${savedUser.mobile}`);
+  
+        await uploadBytes(storageRef, file);
+        
+
+        const downloadURL = await getDownloadURL(storageRef);
+
+  
+        const userDocRef = doc(db, "users", savedUser.mobile);
+        await updateDoc(userDocRef, {
+            profileImage: downloadURL
+        });
+
+        
+        const updatedUserData = { ...savedUser, profileImage: downloadURL };
+        localStorage.setItem("userData", JSON.stringify(updatedUserData));
+
+        alert("Save Profile! ✅");
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
   return (
     <div className="profile-container">
       <Navbar />
@@ -68,6 +100,7 @@ useEffect(() => {
                   alt="profile" 
                   className="profile-preview-img" 
                 />
+           { /*    <img src={icon} alt="edit icon" className="edit"/>*/}
               </div>
            
             </div>

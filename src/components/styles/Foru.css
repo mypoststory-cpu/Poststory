@@ -38,7 +38,7 @@
   gap: 110px;
   padding: 14px 20px;
   border-bottom: 1px solid #ffa500;
-  margin-bottom: 20px;
+  
   margin-top: 20px;
   border-top: 1px solid #ffa500;
 }
@@ -74,8 +74,9 @@
 }
 
 .right-side5 {
-    display: flex;
-    justify-content: flex-end;
+   display: flex;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .filter-controls5 {
@@ -85,12 +86,10 @@
 
 .filter-trigger5 {
     display: flex;
-    align-items: center;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    border-radius: 20px;
-    cursor: pointer;
+  align-items: center;
+  padding: 8px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 .posts-grid5{
 display: grid;

@@ -61,15 +61,12 @@ export default function SignatureSelection() {
   return (
     <div className="selection-container">
       <Navbar />
-    <div className="subscription-header-nav"style={{paddingLeft:'20px'}}>
-          <img 
-            src={backArrow} 
-            alt="back" 
-            className="back-btn" 
-            onClick={() => navigate(-1)} 
-          />
-          <h3>Signature Selection</h3>
-        </div>
+     <div className="profile-header">
+         <img src={backArrow} alt="back" className="back-icon6" onClick={() => window.history.back()} />
+                
+        <h3>Signature</h3>
+      </div>
+
     
       <div className="signature-main-wrapper">
         {isEditing ? (

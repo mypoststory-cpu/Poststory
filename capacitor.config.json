@@ -5,8 +5,12 @@
   "plugins": {
     "GoogleAuth": {
       "scopes": ["profile", "email"],
-    "serverClientId": "882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com",
+      "serverClientId": "882147774912-7fsnctiqv4h0gqmthd5r65b7lv25kc5a.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
+    },
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["phone", "google.com"]
     }
   }
 }

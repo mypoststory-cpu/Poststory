@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import searchIcon from "../../src/assets/Home/1.png";
 import heartIcon from "../../src/assets/Home/2.png";
 import menuIcon from "../../src/assets/Home/3.png";
-import defaultProfileImg from "../../src/assets/2.png";
+import defaultProfileImg from "../../src/assets/camera.png";
+import { auth } from "../firebaseConfig"; // Ensure this is imported at the top
+import { signOut } from "firebase/auth";
 
 export default function Navbar({ onSearch }) { 
   const [isSearching, setIsSearching] = useState(false);
@@ -23,21 +25,29 @@ export default function Navbar({ onSearch }) {
     
     if (onSearch) onSearch(value);
   };
-  const handleLogout = () => {
-  localStorage.removeItem("userData");
-  setIsMenuOpen(false);
- navigate("/login");
- };
-
-useEffect(() => {
-  const savedData = JSON.parse(localStorage.getItem("userData"));
-  if (savedData) {
-    setUserData({
-      name: savedData.name || "User",
-      profileImg: savedData.profileImage || savedData.profileImg || null,
-      mobile: savedData.mobile
-    });
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    localStorage.clear(); 
+    navigate("/login", { replace: true });
+    window.location.reload(); 
+  } catch (error) {
+    console.error("Logout Error:", error);
   }
+};
+useEffect(() => {
+  const loadData = async () => {
+    const savedData = JSON.parse(localStorage.getItem("userData"));
+    if (savedData?.mobile) {
+ 
+      setUserData({
+        name: savedData.name || "User",
+        profileImg: savedData.profileImage || null, 
+        mobile: savedData.mobile
+      });
+    }
+  };
+  loadData();
 }, []);
 const goToHome = () => {
   navigate("/home");
@@ -64,13 +74,14 @@ const goToHome = () => {
               <li onClick={() => { navigate("/profile"); setIsMenuOpen(false); }}>Profile</li>
               <li onClick={()=> {navigate("/SignatureSelection"); setIsMenuOpen(false);}}>Signature</li>
               
+          <li onClick={() => {navigate("/mysubscription"); setIsMenuOpen(false);}}>My Subscription </li>
        
-              <li onClick={() => { navigate("/subscription"); setIsMenuOpen(false); }}>Buy Plan</li>
+              
                <li onClick={() => { navigate("/history"); setIsMenuOpen(false); }}>History</li>
               <li onClick={() => {navigate("/helpfeedback"); setIsMenuOpen(false); }}>Help & Feedback</li>
               <li onClick={() => {navigate("/privacypolicy"); setIsMenuOpen(false);}}>Privacy Policy</li>
               <li onClick={() => {navigate("/termsofservice"); setIsMenuOpen(false);}}>Terms and Services</li>
-              <li onClick={() => {navigate("/mysubscription"); setIsMenuOpen(false);}}>My Subscription </li>
+           
                      <li className="logout-btn" onClick={handleLogout}>Logout</li>
             </ul>
           </div>
