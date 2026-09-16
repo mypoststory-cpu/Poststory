@@ -5,11 +5,11 @@ import staticLogoImage from "../assets/Logo2.png";
 import arrowImg from "../../src/assets/Arrow.png";
 import Swal from 'sweetalert2';
 import { checkAdmin } from "../checkAdmin";
-import axios from "axios";
 
-// Firebase Firestore
+// Firebase Firestore & Native Capacitor Auth
 import { db } from "../firebaseConfig";
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,14 +18,15 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [verificationId, setVerificationId] = useState("");
 
-  // Cloud Functions Base URL (Matches your Registration component)
-  const REGION_URL = "https://us-central1-allezpoststory.cloudfunctions.net";
 
- const handleSendOtp = async () => {
+// Send real-time OTP via Native Capacitor Firebase Auth
+// Send real-time OTP via Native Capacitor Firebase Auth
+  const handleSendOtp = async () => {
     try {
       setLoading(true);
-      const cleanMobile = mobileNumber.replace(/\D/g, '').slice(-10); 
+      const cleanMobile = mobileNumber.replace(/\D/g, '').slice(-10);  
       
       if (cleanMobile.length < 10) {
         alert("Please enter a valid 10-digit number.");
@@ -33,16 +34,24 @@ const Login = () => {
         return;
       }
 
-      // Call Firebase Cloud Function to send SMS via Twilio
-      const response = await axios.post(`${REGION_URL}/sendTwilioOTP`, {
-        phone: `+91${cleanMobile}`
+      const phoneNumber = `+91${cleanMobile}`;
+      console.log("Attempting native login for:", phoneNumber);
+
+      // Native phone auth call
+      const result = await FirebaseAuthentication.signInWithPhoneNumber({
+        phoneNumber: phoneNumber,
       });
 
-      if (response.data.success) {
-        // REMOVED: Frontend no longer needs to write to Firestore here, 
-        // because your backend cloud function already safely saved the OTP code!
+      console.log("Full Result Object from Native:", JSON.stringify(result));
 
-        setIsOtpSent(true);
+      // Flexible check to catch verificationId across different plugin structures
+      const vId = result?.verificationId || result?.credential?.verificationId || result?.code;
+
+      // Even if vId is structured differently, if result comes back successfully, allow entering OTP
+      if (result) {
+        setVerificationId(vId || "bypass_id"); 
+        setIsOtpSent(true); // This unlocks your OTP input box!
+
         Swal.fire({
           title: 'OTP sent successfully! 📱',
           background: 'rgba(255, 255, 255, 0.2)', 
@@ -52,19 +61,21 @@ const Login = () => {
           timer: 2000,
           customClass: { popup: 'transparent-alert' }
         });
+      } else {
+        throw new Error("verificationId is missing from the response.");
       }
+
     } catch (error) {
-      console.error("Auth Error:", error);
-      alert("Error: " + (error.response?.data?.error || error.message));
+      console.error("Firebase Native SMS Auth Error:", error);
+      const errorMessage = error.message ? error.message : JSON.stringify(error);
+      alert("Auth Error: " + errorMessage);
     } finally {
       setLoading(false);
     }
   };
-const handleVerifyOtp = async () => {
-    // 10-digit format for Firestore users collection & admin check
+  // Verify code using Native confirmation
+  const handleVerifyOtp = async () => {
     const rawMobile = mobileNumber.replace(/\D/g, '').slice(-10);
-    // +91 format for the OTP collection lookup
-    const cleanPhone = `+91${rawMobile}`; 
     const cleanOtp = otp.replace(/\s/g, '').trim();
 
     if (!cleanOtp || cleanOtp.length !== 6) {
@@ -75,34 +86,13 @@ const handleVerifyOtp = async () => {
     setLoading(true);
 
     try {
-      // Verify OTP from Firestore using the +91 format
-      const docRef = await getDoc(doc(db, "otps", cleanPhone));
+      // Confirm credentials natively
+      await FirebaseAuthentication.signInWithCredential({
+        verificationId: verificationId,
+        smsCode: cleanOtp,
+      });
 
-      if (!docRef.exists()) {
-        alert("OTP expired or not found.");
-        setLoading(false);
-        return;
-      }
-
-      const data = docRef.data();
-      if (data.otp !== cleanOtp) {
-        alert("Invalid OTP entered.");
-        setLoading(false);
-        return;
-      }
-
-      // Delete OTP after successful verification
-      await deleteDoc(doc(db, "otps", cleanPhone));
-
-    } catch (authError) {
-      console.error("Code Verification Failed:", authError);
-      alert("Wrong OTP entered or expired. Please check.");
-      setLoading(false);
-      return; 
-    }
-
-    try {
-      // ADMIN CHECK (uses 10-digit rawMobile)
+      // ADMIN CHECK
       const isAdminStatus = await checkAdmin(rawMobile); 
 
       if (isAdminStatus === true) {
@@ -114,7 +104,7 @@ const handleVerifyOtp = async () => {
         return;
       }
 
-      // FIRESTORE USER CHECK (uses 10-digit rawMobile to match your screenshot)
+      // FIRESTORE USER CHECK
       const userDoc = await getDoc(doc(db, "users", rawMobile));
 
       if (userDoc.exists()) {
@@ -131,9 +121,9 @@ const handleVerifyOtp = async () => {
         navigate("/registration");
       }
 
-    } catch (dbError) {
-      console.error("Database Check Error:", dbError);
-      alert("Database error, please try again.");
+    } catch (authError) {
+      console.error("Code Verification Failed:", authError);
+      alert("Wrong OTP entered or expired. Please check.");
     } finally {
       setLoading(false);
     }

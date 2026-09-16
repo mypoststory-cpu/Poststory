@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "882147774912-mohpe2mcan7v3sdu78hpukos6se22u9r.apps.googleusercontent.com",
+          "client_id": "882147774912-dgfqho2ajl6tlkkjfrcajbkt5uh29nqp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.poststory.app",
-            "certificate_hash": "1c9299e79156461dc40ee1c251787dd46334eade"
+            "certificate_hash": "45a02bb6776cdc29a5f5711219c854f3426c07a2"
           }
         },
         {

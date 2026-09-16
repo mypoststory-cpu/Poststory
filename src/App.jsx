@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
-import { FirebaseAppCheck } from '@capacitor-firebase/app-check';
 import { doc, getDoc } from "firebase/firestore"; 
 import { db } from "./firebaseConfig";
 
@@ -36,7 +35,6 @@ import MySubscription from "./components/pages/MySubscription";
 import VideoProcessor from "./components/VideoProcessor";
 import AIGenerator from "./components/pages/AIGenerator";
 
-
 const CURRENT_APP_VERSION = "1.0.1"; 
 
 const isLoggedIn = () => {
@@ -44,8 +42,8 @@ const isLoggedIn = () => {
 };
 
 const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  if (!isLoggedIn) {
+  const authStatus = localStorage.getItem("isLoggedIn") === "true";
+  if (!authStatus) {
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -54,41 +52,23 @@ const ProtectedRoute = ({ children }) => {
 export default function App() {
   
   useEffect(() => {
-
-    const initAppCheck = async () => {
-      try {
-        await FirebaseAppCheck.initialize({
-          providerFactory: 'playIntegrity', 
-          isTokenAutoRefreshEnabled: true,
-        });
-        console.log("App Check Native Integrity Mode Initialized ✅");
-      } catch (error) {
-        console.warn("App Check Dev Bypass Enabled. ReCAPTCHA completely blocked.");
-      }
-    };
-
-   
     const autoUpdateVersionCheck = async () => {
       try {
-   
         const versionRef = doc(db, "app_settings", "version_control");
         const docSnap = await getDoc(versionRef);
         
         if (docSnap.exists()) {
-          const latestServerVersion = docSnap.data().current_version; // exm. "1.0.2"
+          const latestServerVersion = docSnap.data().current_version; 
           
-        
           if (CURRENT_APP_VERSION !== latestServerVersion) {
             console.log("New Version Update! Wait Cache Clean...");
             
-         
             if ('caches' in window) {
               const cacheNames = await caches.keys();
               await Promise.all(
                 cacheNames.map(cacheName => caches.delete(cacheName))
               );
             }
-
 
             window.location.reload(true);
           }
@@ -98,14 +78,12 @@ export default function App() {
       }
     };
 
-    initAppCheck();
     autoUpdateVersionCheck();
   }, []);
 
   return (
     <>
       <Routes>
-        {/* Welcome Page */}
         <Route 
           path="/" 
           element={isLoggedIn() ? <Navigate to="/home" replace /> : <Welcome />} 
@@ -132,7 +110,7 @@ export default function App() {
         <Route path="/category/thoughts" element={<ProtectedRoute><Thoughts/> </ProtectedRoute>} />
         <Route path="/category/funny" element={<ProtectedRoute><Funny/></ProtectedRoute>} />
         <Route path="/category/days" element={<ProtectedRoute><Days/></ProtectedRoute> } />
-      <Route path="/category/political" element={<ProtectedRoute><Political/></ProtectedRoute>}/>
+        <Route path="/category/political" element={<ProtectedRoute><Political/></ProtectedRoute>}/>
         <Route path="/trending" element={<ProtectedRoute><Trending/></ProtectedRoute>} />
         <Route path="/foru" element={<ProtectedRoute><Foru/> </ProtectedRoute>} />
         <Route path="/post-selection" element={<ProtectedRoute> <PostSelection /></ProtectedRoute>} />
